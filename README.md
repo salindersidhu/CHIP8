@@ -1,4 +1,4 @@
-#Python CHIP-9 CPU Emulator
+#Python CHIP-8 CPU Emulator
 
 Description:
 -------------
@@ -8,7 +8,6 @@ For more information please refer to this following WIKI arricle on [CHIP-8](htt
 Dependencies:
 -------------
 - `Python 3` [(Latest Build)](https://www.python.org/downloads/)
-- `PyQT` [(Version 5)](http://www.qt.io/download/)
 
 Running the Emulator:
 -------------

@@ -5,9 +5,15 @@ Description:
 A Python based GUI implementation of the CHIP-8 System.
 For more information please refer to this following WIKI arricle on [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8).
 
+Supports:
+-------------
+- Microsoft Windows 7, 8, 8.1, 10
+- Linux Based Distributions
+
 Dependencies:
 -------------
-- `Python 3` [(Latest Build)](https://www.python.org/downloads/)
+- `Python 3` [(Build 3.X)](https://www.python.org/downloads/)
+- `PyQt 4` [(Build 4.11)](https://riverbankcomputing.com/software/pyqt/download)
 
 Running the Emulator:
 -------------

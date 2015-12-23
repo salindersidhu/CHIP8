@@ -1,2 +1,3 @@
 # Python Temporary Files
 *.pyc
+__pycache__

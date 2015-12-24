@@ -1,5 +1,5 @@
 import sys
-import chip8cpu
+from chip8 import Chip8
 from PyQt4 import QtGui, QtCore
 
 class Window(QtGui.QMainWindow):

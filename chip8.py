@@ -136,7 +136,7 @@ class Chip8(object):
 
     def load_rom(self, file_name):
         '''Load a file's binary data into the CPU's RAM buffer.'''
-        self._reset()
+        self.__reset()
         # Load data from file in bin mode
         file_buffer = open(file_name, "rb")
         rom_data = file_buffer.read()
@@ -148,7 +148,7 @@ class Chip8(object):
             hex_data += "0"
         # Copy padded string into memory, each byte is 2 hex chars
         for i in range(0, len(hex_data) - 1, 2):
-            self.__ram[(i / 2) + 512] = hex_data[i:(i + 2)]
+            self.__ram[int(i / 2) + 512] = hex_data[i:int(i + 2)]
 
     def emulate_cycle(self):
         '''Emulate a CPU cycle. Fetch the next instruction from RAM, decode

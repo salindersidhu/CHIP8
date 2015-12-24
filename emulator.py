@@ -6,9 +6,13 @@ from guiwindow import GUIWindow
 
 class EmulatorApplication:
     ''''''
-    
+
     def __init__(self):
         ''''''
+        # Application variables
+        self.isPaused = False
+        self.isRomLoaded = False
+        self.CPU = Chip8()
         # GUI Window variables
         self.winTitle = 'Python CHIP-8 Emulator'
         self.winWidth = 630
@@ -26,19 +30,20 @@ class EmulatorApplication:
         # Finish GUI window setup
         self.window.done()
         sys.exit(self.app.exec_())
-        
+
     def setup_menu(self):
         ''''''
         self.window.addMenu('File')
         self.window.addMenu('Options')
         self.window.addMenu('Settings')
         self.window.addMenu('Help')
-        
+
     def setup_menu_items(self):
         ''''''
         # Setup File menu items
         self.window.addMenuItem('File', 'Reset', 'Reset the emulator')
-        self.window.addMenuItem('File', 'Load ROM', 'Load ROM file into RAM')
+        self.window.addMenuItem('File', 'Load ROM', 'Load ROM file into RAM',
+                                self.event_load_ROM)
         self.window.addMenuSeperator('File')
         self.window.addMenuItem('File', 'Quit', 'Exit the application',
                                 self.window.close)
@@ -55,10 +60,12 @@ class EmulatorApplication:
                                 'Change the background colour')
         self.window.addMenuItem('Settings', 'Pixel Colour',
                                 'Change the pixel colour')
+        self.window.addMenuItem('Settings', 'Key Mappings',
+                                'Change the controls for the emulator')
         # Setup Help menu items
         self.window.addMenuItem('Help', 'About', 'About the application',
                                 self.event_about)
-        
+    
     def event_about(self):
         ''''''
         msgBox = QtGui.QMessageBox()
@@ -67,7 +74,18 @@ class EmulatorApplication:
             '\n\nCopyright (C) 2015 Salinder Sidhu'
         # Render the message box
         QtGui.QMessageBox.information(self.window, msgBoxTitle, msgBoxText,
-                                      buttons = QtGui.QMessageBox.Ok)        
+                                      buttons = QtGui.QMessageBox.Ok)
+ 
+    def event_load_ROM(self):
+        ''''''
+        filename = QtGui.QFileDialog.getOpenFileName(self.window,
+                                                     'Open File',
+                                                     '', 'CHIP8 ROM (*.c8)')
+        # Load the CHIP-8 ROM if the filename exists
+        if filename:
+            self.CPU.load_rom(filename)
+            self.isRomLoaded = True
+            self.window.setStatusBar('ROM Loaded')
 
 if __name__ == '__main__':
     EmulatorApplication()

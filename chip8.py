@@ -142,13 +142,13 @@ class Chip8(object):
         rom_data = file_buffer.read()
         file_buffer.close()
         # Convert file data into hex
-        hex_data = hexlify(rom_data)
+        hex_data = str(hexlify(rom_data))[2:]
         # Pad string such that its length is a multiple of 4
         for i in range(len(hex_data) % 4):
             hex_data += "0"
         # Copy padded string into memory, each byte is 2 hex chars
         for i in range(0, len(hex_data) - 1, 2):
-            self.__ram[int(i / 2) + 512] = hex_data[i:int(i + 2)]
+            self.__ram[int(i / 2) + 512] = hex_data[i:i + 2]
 
     def emulate_cycle(self):
         '''Emulate a CPU cycle. Fetch the next instruction from RAM, decode
@@ -260,7 +260,7 @@ class Chip8(object):
         0 when there isn't.'''
         self.__V[int(self.__opcode[1], 16)] += \
             self.__V[int(self.__opcode[2], 16)]
-        if sum > 255:
+        if self.__V[int(self.__opcode[1], 16)] > 255:
             self.__V[15] = 1
             self.__V[int(self.__opcode[1], 16)] &= 255 # Take the lowest 8 bits
         else:
@@ -310,7 +310,7 @@ class Chip8(object):
         '''0x8XYE: Shifts VX left by one. VF is set to the value of the most
         significant bit of VX before the shift.'''
         # Check for least significant bit
-        if self.__V[int(self.__opcode[1], 16)] / 255 > 1:
+        if int(self.__V[int(self.__opcode[1], 16)] / 255) > 1:
             self.__V[15] = 1
         else:
             self.__V[15] = 0
@@ -368,21 +368,21 @@ class Chip8(object):
             spr_row = data[i]
             for j in range(8):
                 new_x = x + j
-            if new_x >= 64:
-                # Wrap to other side
-                while new_x >= 64:
-                    new_x -= 64
-            new_y = y
-            if new_y >= 32:
-                # Wrap to other side
-                while new_y >= 32:
-                    new_y -= 32
-            # XOR drawing mode
-            if spr_row[j] == "1" and self.__gfx[new_x][new_y] == 1:
-                self.__gfx[new_x][new_y] = 0
-                self.__V[15] = 1
-            elif spr_row[j] == "1" and self.__gfx[new_x][new_y] == 0:
-                self.__gfx[new_x][new_y] = 1
+                if new_x >= 64:
+                    # Wrap to other side
+                    while new_x >= 64:
+                        new_x -= 64
+                new_y = y
+                if new_y >= 32:
+                    # Wrap to other side
+                    while new_y >= 32:
+                        new_y -= 32
+                # XOR drawing mode
+                if spr_row[j] == "1" and self.__gfx[new_x][new_y] == 1:
+                    self.__gfx[new_x][new_y] = 0
+                    self.__V[15] = 1
+                elif spr_row[j] == "1" and self.__gfx[new_x][new_y] == 0:
+                    self.__gfx[new_x][new_y] = 1
             # Move down for next row
             y += 1
         self.__is_draw = True
@@ -447,10 +447,10 @@ class Chip8(object):
         '''FX33: Stores the Binary-coded decimal representation of VX at the
         addresses I, I plus 1, and I plus 2.'''
         num = self.__V[int(self.__opcode[1], 16)]
-        self.__ram[self.__I] = hex(num / 100).replace('x', "")
-        num -= 100 * (num / 100)
-        self.__ram[self.__I + 1] = hex(num / 10).replace('x', "")
-        num -= 10 * (num / 10)
+        self.__ram[self.__I] = hex(int(num / 100)).replace('x', "")
+        num -= 100 * int(num / 100)
+        self.__ram[self.__I + 1] = hex(int(num / 10)).replace('x', "")
+        num -= 10 * int(num / 10)
         self.__ram[self.__I + 2] = hex(num).replace('x', "")
         self.__pc += 2
 

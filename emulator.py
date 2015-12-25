@@ -68,7 +68,7 @@ class EmulatorApplication:
                                 self.eventChangePxColour)        
         self.window.addMenuItem('Settings', 'Background Colour',
                                 self.eventChangeBgColour)
-        self.window.addMenuItem('Settings', 'Control Key Mapping')
+        self.window.addMenuItem('Settings', 'Key Bindings')
         # Setup Help menu items
         self.window.addMenuItem('Help', 'About', self.eventAbout)
 

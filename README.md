@@ -2,13 +2,17 @@
 
 Description:
 -------------
-A Python based GUI implementation of the CHIP-8 System.
-For more information please refer to this following WIKI arricle on [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8).
+A Python based GUI implementation of the CHIP-8 system. A project I developed with the intention of gaining knowledge about emulators and cross platform GUI libraries.
+For more specific information about the CHIP-8 system, please refer to the following WIKI arricle on [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8).
 
 Supports:
 -------------
 - Microsoft Windows 7, 8, 8.1, 10
 - Linux Based Distributions
+
+ROMs:
+-------------
+ROMs for the CHIP-8 system can be downloaded for free at [Chip8.com](http://www.chip8.com/?page=84) and [Zophar's Domain](http://www.zophar.net/pdroms/chip8.html). In order to load these ROMs with the emulator, the files must be renamed to have a `.c8` extension.
 
 Dependencies:
 -------------

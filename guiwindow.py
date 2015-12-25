@@ -3,7 +3,7 @@ from guicanvas import GUICanvas
 
 class GUIWindow(QtGui.QMainWindow):
     ''''''
-    
+
     def __init__(self, winTitle, winWidth, winHeight, winIcon):
         ''''''
         super(GUIWindow, self).__init__()
@@ -40,9 +40,14 @@ class GUIWindow(QtGui.QMainWindow):
     def keyPressEvent(self, event):
         ''''''
         eventKey = event.key()
-        for key in self.__keyInputDict:
-            if eventKey == key:
-                self.__keyInputDict[key]()
+        if eventKey in self.__keyInputDict:
+            self.__keyInputDict[eventKey][0]()
+
+    def keyReleaseEvent(self, event):
+        ''''''
+        eventKey = event.key()
+        if eventKey in self.__keyInputDict:
+            self.__keyInputDict[eventKey][1]()
 
     def setStatusBar(self, statusText):
         ''''''
@@ -52,7 +57,7 @@ class GUIWindow(QtGui.QMainWindow):
         ''''''
         # Render the window
         self.show()
-        
+
     def addMenu(self, menuTitle):
         ''''''
         # Check if menuTitle does not exist (prevent duplicates)

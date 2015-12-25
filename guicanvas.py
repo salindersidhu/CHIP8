@@ -2,7 +2,7 @@ from PyQt4 import QtGui
 
 class GUICanvas(QtGui.QFrame):
     ''''''
-    
+
     def __init__(self, parent):
         ''''''
         super(GUICanvas, self).__init__(parent)

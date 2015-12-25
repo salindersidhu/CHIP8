@@ -16,6 +16,7 @@ class EmulatorApplication:
         self.CPU = Chip8()
         self.FPS = 60
         self.timer = QtCore.QBasicTimer()
+        self.keyBindings = {}
         # GUI Window variables
         self.winTitle = 'Python CHIP-8 Emulator'
         self.winWidth = 640
@@ -32,8 +33,9 @@ class EmulatorApplication:
         # Configure the GUI window
         self.window = GUIWindow(self.winTitle, self.winWidth, self.winHeight,
                                 self.winIcon)
-        self.SetupMenu()
-        self.SetupMenuItems()
+        self.setupMenu()
+        self.setupMenuItems()
+        self.setupKeyBindings()
         self.window.setStatusBar(self.defaultStatusText)
         self.window.setupDrawingGrid(self.canvasPxWidth, self.canvasPxHeight,
                                      self.canvasPxSize)
@@ -43,14 +45,14 @@ class EmulatorApplication:
         self.emulate()
         sys.exit(self.app.exec_())
 
-    def SetupMenu(self):
+    def setupMenu(self):
         ''''''
         self.window.addMenu('File')
         self.window.addMenu('Options')
         self.window.addMenu('Settings')
         self.window.addMenu('Help')
 
-    def SetupMenuItems(self):
+    def setupMenuItems(self):
         ''''''
         # Setup File menu items
         self.window.addMenuItem('File', 'Load ROM', self.eventLoadROM)
@@ -71,6 +73,58 @@ class EmulatorApplication:
         self.window.addMenuItem('Settings', 'Key Bindings')
         # Setup Help menu items
         self.window.addMenuItem('Help', 'About', self.eventAbout)
+
+    def setupKeyBindings(self):
+        ''''''
+        self.keyBindings[QtCore.Qt.Key_1] = [
+            lambda: self.CPU.set_key_state(0, 1),
+            lambda: self.CPU.set_key_state(0, 0)]
+        self.keyBindings[QtCore.Qt.Key_2] = [
+            lambda: self.CPU.set_key_state(1, 1),
+            lambda: self.CPU.set_key_state(1, 0)]
+        self.keyBindings[QtCore.Qt.Key_3] = [
+            lambda: self.CPU.set_key_state(2, 1),
+            lambda: self.CPU.set_key_state(2, 0)]
+        self.keyBindings[QtCore.Qt.Key_4] = [
+            lambda: self.CPU.set_key_state(3, 1),
+            lambda: self.CPU.set_key_state(3, 0)]
+        self.keyBindings[QtCore.Qt.Key_Q] = [
+            lambda: self.CPU.set_key_state(4, 1),
+            lambda: self.CPU.set_key_state(4, 0)]
+        self.keyBindings[QtCore.Qt.Key_W] = [
+            lambda: self.CPU.set_key_state(5, 1),
+            lambda: self.CPU.set_key_state(5, 0)]
+        self.keyBindings[QtCore.Qt.Key_E] = [
+            lambda: self.CPU.set_key_state(6, 1),
+            lambda: self.CPU.set_key_state(6, 0)]
+        self.keyBindings[QtCore.Qt.Key_R] = [
+            lambda: self.CPU.set_key_state(7, 1),
+            lambda: self.CPU.set_key_state(7, 0)]
+        self.keyBindings[QtCore.Qt.Key_A] = [
+            lambda: self.CPU.set_key_state(8, 1),
+            lambda: self.CPU.set_key_state(8, 0)]
+        self.keyBindings[QtCore.Qt.Key_S] = [
+            lambda: self.CPU.set_key_state(9, 1),
+            lambda: self.CPU.set_key_state(9, 0)]
+        self.keyBindings[QtCore.Qt.Key_D] = [
+            lambda: self.CPU.set_key_state(10, 1),
+            lambda: self.CPU.set_key_state(10, 0)]
+        self.keyBindings[QtCore.Qt.Key_F] = [
+            lambda: self.CPU.set_key_state(11, 1),
+            lambda: self.CPU.set_key_state(11, 0)]
+        self.keyBindings[QtCore.Qt.Key_Z] = [
+            lambda: self.CPU.set_key_state(12, 1),
+            lambda: self.CPU.set_key_state(12, 0)]
+        self.keyBindings[QtCore.Qt.Key_X] = [
+            lambda: self.CPU.set_key_state(13, 1),
+            lambda: self.CPU.set_key_state(13, 0)]
+        self.keyBindings[QtCore.Qt.Key_C] = [
+            lambda: self.CPU.set_key_state(14, 1),
+            lambda: self.CPU.set_key_state(14, 0)]
+        self.keyBindings[QtCore.Qt.Key_V] = [
+            lambda: self.CPU.set_key_state(15, 1),
+            lambda: self.CPU.set_key_state(15, 0)]
+        self.window.updateKeyBindings(self.keyBindings)
 
     def emulate(self):
         ''''''
@@ -97,7 +151,7 @@ class EmulatorApplication:
         else:
             # Render the error message box
             QtGui.QMessageBox.critical(self.window, msgBoxTitle, msgBoxText,
-                                       buttons = QtGui.QMessageBox.Ok)             
+                                       buttons = QtGui.QMessageBox.Ok)
 
     def eventLoadState(self):
         ''''''

@@ -93,10 +93,12 @@ class Chip8(object):
         # Load default fontset into memory
         for i in range(80):
             self.__ram[i] = self.__font_set[i]
-    
+
     def set_key_state(self, key, state):
         '''Set the state of a key.'''
-        self.__key[key] = state
+        # Check if key list has been initialized
+        if self.__key:
+            self.__key[key] = state
 
     def get_GFX(self):
         '''Return the graphics buffer.'''

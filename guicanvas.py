@@ -11,6 +11,9 @@ class GUICanvas(QtGui.QFrame):
         self.__pxSize = 0
         self.__gridWidth = 0
         self.__gridHeight = 0
+        # Default pixel and background colours for the grid
+        self.__pxColour = (255, 255, 255)
+        self.__bgColour = (0, 0, 0)
 
     def setGrid(self, width, height, pxSize):
         ''''''
@@ -23,6 +26,22 @@ class GUICanvas(QtGui.QFrame):
         ''''''
         self.__grid = [row[:] for row in grid]
         self.update()
+
+    def updatePxColour(self, pxColour):
+        ''''''
+        self.__pxColour = pxColour
+
+    def updateBgColour(self, bgColour):
+        ''''''
+        self.__bgColour = bgColour
+
+    def getPxColour(self):
+        ''''''
+        return self.__pxColour
+
+    def getBgColour(self):
+        ''''''
+        return self.__bgColour
 
     def clearGrid(self):
         ''''''
@@ -39,8 +58,12 @@ class GUICanvas(QtGui.QFrame):
         for y in range(self.__gridHeight):
             for x in range(self.__gridWidth):
                 if self.__grid[x][y]:
-                    color = QtGui.QColor(0, 84, 180)
+                    color = QtGui.QColor(self.__pxColour[0],
+                                         self.__pxColour[1],
+                                         self.__pxColour[2])
                 else:
-                    color = QtGui.QColor(0, 0, 0)
+                    color = QtGui.QColor(self.__bgColour[0],
+                                         self.__bgColour[1],
+                                         self.__bgColour[2])
                 painter.fillRect(x * self.__pxSize, y * self.__pxSize,
                                  self.__pxSize, self.__pxSize, color)

@@ -58,10 +58,20 @@ class GUIWindow(QtGui.QMainWindow):
             menuItem = QtGui.QAction('&' + menuItem, self)
             if evtFunction:
                 menuItem.triggered.connect(lambda: evtFunction())
+            else:
+                menuItem.triggered.connect(lambda: self.defaultEvent())
             # Add the menu items to the menu item dictionary
             self.__menuDict[menuTitle].addAction(menuItem)
         else:
             raise Exception('Menu ' + menuTitle + ' was not found!')
+
+    def defaultEvent(self):
+        ''''''
+        msgBoxTitle = 'Error'
+        msgBoxText = 'The specific action is not implemented!'
+        # Render the error message box
+        QtGui.QMessageBox.critical(self, msgBoxTitle, msgBoxText,
+                                   buttons = QtGui.QMessageBox.Ok)
 
     def setupDrawingGrid(self, canvasWidth, canvasHeight, pxSize):
         ''''''
@@ -70,11 +80,27 @@ class GUIWindow(QtGui.QMainWindow):
     def clearDrawingGrid(self):
         ''''''
         self.__canvas.clearGrid()
-        
+
     def updateDrawingGrid(self, grid):
         ''''''
         self.__canvas.updateGrid(grid)
-    
+
+    def setDrawingGridBgColour(self, bgColour):
+        ''''''
+        self.__canvas.updateBgColour(bgColour)
+
+    def setDrawingGridPxColour(self, pxColour):
+        ''''''
+        self.__canvas.updatePxColour(pxColour)
+
+    def getDrawingGridBgColour(self):
+        ''''''
+        return self.__canvas.getBgColour()
+
+    def getDrawingGridPxColour(self):
+        ''''''
+        return self.__canvas.getPxColour()
+
     def addMenuSeperator(self, menuTitle):
         ''''''
         # Check if menuTitle exists

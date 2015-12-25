@@ -1,5 +1,6 @@
 import sys
 import pickle
+import configparser
 from PyQt4 import QtGui, QtCore
 from chip8 import Chip8
 from guiwindow import GUIWindow
@@ -11,7 +12,7 @@ class EmulatorApplication:
         ''''''
         # Application variables
         self.isPaused = False
-        self.isRomLoaded = False
+        self.isRunning = False
         self.CPU = Chip8()
         self.FPS = 60
         self.timer = QtCore.QBasicTimer()
@@ -19,17 +20,23 @@ class EmulatorApplication:
         self.winTitle = 'Python CHIP-8 Emulator'
         self.winWidth = 640
         self.winHeight = 360
-        self.winIcon = 'icon.png'
-        self.defaultStatus = 'Ready...'
+        self.canvasPxWidth = 64
+        self.canvasPxHeight = 32
+        self.canvasPxSize = 10
+        self.winIcon = 'Resources/icon.png'
+        self.defaultStatusText = 'Please load a ROM file...'
+        self.pausedStatusText = 'PAUSED'
+        self.runningStatusText = 'Running...'
         # Configure the application
         self.app = QtGui.QApplication(sys.argv)
         # Configure the GUI window
         self.window = GUIWindow(self.winTitle, self.winWidth, self.winHeight,
                                 self.winIcon)
-        self.window.setStatusBar(self.defaultStatus)
         self.setup_menu()
         self.setup_menu_items()
-        self.window.setupDrawingGrid(64, 32, 10)
+        self.window.setStatusBar(self.defaultStatusText)
+        self.window.setupDrawingGrid(self.canvasPxWidth, self.canvasPxHeight,
+                                     self.canvasPxSize)
         # Finish GUI window setup
         self.window.done()
         # Start the CHIP-8 timed emulation
@@ -46,41 +53,51 @@ class EmulatorApplication:
     def setup_menu_items(self):
         ''''''
         # Setup File menu items
-        self.window.addMenuItem('File', 'Reset', 'Reset the emulator')
-        self.window.addMenuItem('File', 'Load ROM', 'Load ROM file into RAM',
-                                self.event_load_ROM)
+        self.window.addMenuItem('File', 'Load ROM', self.event_load_ROM)
         self.window.addMenuSeperator('File')
-        self.window.addMenuItem('File', 'Quit', 'Exit the application',
-                                self.window.close)
+        self.window.addMenuItem('File', 'Quit', self.window.close)
         # Setup Option menu items
-        self.window.addMenuItem('Options', 'Pause', 'Pause the emulator')
-        self.window.addMenuItem('Options', 'Resume', 'Resume the emulator')
+        self.window.addMenuItem('Options', 'Reset', self.event_reset)
+        self.window.addMenuItem('Options', 'Pause / Resume',
+                                self.event_pause_resume)
         self.window.addMenuSeperator('Options')
-        self.window.addMenuItem('Options', 'Save State',
-                                'Save emulator state to a file')
-        self.window.addMenuItem('Options', 'Load State',
-                                'Load emulator state from a file')
+        self.window.addMenuItem('Options', 'Save State')
+        self.window.addMenuItem('Options', 'Load State')
         # Setup Settings menu items
-        self.window.addMenuItem('Settings', 'Background Colour',
-                                'Change the background colour')
-        self.window.addMenuItem('Settings', 'Pixel Colour',
-                                'Change the pixel colour')
-        self.window.addMenuItem('Settings', 'Key Mappings',
-                                'Change the controls for the emulator')
+        self.window.addMenuItem('Settings', 'Pixel Colour')        
+        self.window.addMenuItem('Settings', 'Background Colour')
+        self.window.addMenuItem('Settings', 'Control Key Mapping')
         # Setup Help menu items
-        self.window.addMenuItem('Help', 'About', 'About the application',
-                                self.event_about)
+        self.window.addMenuItem('Help', 'About', self.event_about)
 
     def emulate(self):
         ''''''
         try:
-            if self.isRomLoaded:
+            if self.isRunning:
                 if  not self.isPaused:
                     self.CPU.emulate_cycle()
                     self.window.updateDrawingGrid(self.CPU.get_GFX())
         finally:
             QtCore.QTimer.singleShot(1 / self.FPS, self.emulate)
-    
+
+    def event_pause_resume(self):
+        ''''''
+        if self.isRunning:
+            self.isPaused = not self.isPaused
+            # Set the status bar text depending on the state of the emulator
+            if self.isPaused:
+                self.window.setStatusBar(self.pausedStatusText)
+            else:
+                self.window.setStatusBar(self.runningStatusText)
+
+    def event_reset(self):
+        ''''''
+        if self.isRunning:
+            self.window.clearDrawingGrid()
+            self.CPU.reset()
+            self.window.setStatusBar(self.defaultStatusText)
+            self.isPaused = self.isRunning = False
+
     def event_about(self):
         ''''''
         msgBox = QtGui.QMessageBox()
@@ -99,8 +116,8 @@ class EmulatorApplication:
         # Load the CHIP-8 ROM if the filename exists
         if filename:
             self.CPU.load_rom(filename)
-            self.isRomLoaded = True
-            self.window.setStatusBar('ROM Loaded')
+            self.window.setStatusBar(self.runningStatusText)
+            self.isRunning = True
 
 if __name__ == '__main__':
     EmulatorApplication()

@@ -11,11 +11,14 @@ class GUIWindow(QtGui.QMainWindow):
         self.__menubar = self.menuBar()     # Define a Menu Bar
         self.__menuDict = {}                # Define a map of Menus
         self.__canvas = GUICanvas(self)     # Define a drawing canvas
+        self.__statusLabel = QtGui.QLabel() # Define a new status label
         # Configure the window's properties
         self.setGeometry(0, 0, winWidth, winHeight)
         self.setFixedSize(winWidth, winHeight)
         self.setWindowTitle(winTitle)
         self.setWindowIcon(QtGui.QIcon(winIcon))
+        # Bind the QLabel to the Status Bar
+        self.statusBar().addWidget(self.__statusLabel, 1)
         # Bind the GUI drawing canvas to the GUI window
         self.setCentralWidget(self.__canvas)
         # Set the window to appear in the center of the screen
@@ -31,7 +34,7 @@ class GUIWindow(QtGui.QMainWindow):
         
     def setStatusBar(self, statusText):
         ''''''
-        self.statusBar().showMessage(statusText)
+        self.__statusLabel.setText(statusText)
         
     def done(self):
         ''''''
@@ -47,13 +50,12 @@ class GUIWindow(QtGui.QMainWindow):
             self.__menuDict[menuTitle] = \
             self.__menubar.addMenu('&' + menuTitle);
         
-    def addMenuItem(self, menuTitle, menuItem, statusText, evtFunction=None):
+    def addMenuItem(self, menuTitle, menuItem, evtFunction=None):
         ''''''
         # Check if menuTitle exists
         if menuTitle in self.__menuDict:
             # Create the menu item
             menuItem = QtGui.QAction('&' + menuItem, self)
-            menuItem.setStatusTip(statusText)
             if evtFunction:
                 menuItem.triggered.connect(lambda: evtFunction())
             # Add the menu items to the menu item dictionary
@@ -64,6 +66,10 @@ class GUIWindow(QtGui.QMainWindow):
     def setupDrawingGrid(self, canvasWidth, canvasHeight, pxSize):
         ''''''
         self.__canvas.setGrid(canvasWidth, canvasHeight, pxSize)
+
+    def clearDrawingGrid(self):
+        ''''''
+        self.__canvas.clearGrid()
         
     def updateDrawingGrid(self, grid):
         ''''''

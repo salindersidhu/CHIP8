@@ -76,7 +76,7 @@ class Chip8(object):
                                "55":self.__inst_0xFX55,
                                "65":self.__inst_0xFX65}
 
-    def __reset(self):
+    def reset(self):
         '''Reset the CHIP-8 CPU to it's original state and clear all, stacks,
         registers, graphics buffers, key mappings, timers, RAM buffer and
         program counter.'''
@@ -136,7 +136,7 @@ class Chip8(object):
 
     def load_rom(self, file_name):
         '''Load a file's binary data into the CPU's RAM buffer.'''
-        self.__reset()
+        self.reset()
         # Load data from file in bin mode
         file_buffer = open(file_name, "rb")
         rom_data = file_buffer.read()

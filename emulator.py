@@ -61,8 +61,8 @@ class EmulatorApplication:
         self.window.addMenuItem('Options', 'Pause / Resume',
                                 self.eventPauseResume)
         self.window.addMenuSeperator('Options')
-        self.window.addMenuItem('Options', 'Save State')
-        self.window.addMenuItem('Options', 'Load State')
+        self.window.addMenuItem('Options', 'Save State', self.eventSaveState)
+        self.window.addMenuItem('Options', 'Load State', self.eventLoadState)
         # Setup Settings menu items
         self.window.addMenuItem('Settings', 'Pixel Colour',
                                 self.eventChangePxColour)        
@@ -80,6 +80,35 @@ class EmulatorApplication:
                 self.window.updateDrawingGrid(self.CPU.get_GFX())
         finally:
             QtCore.QTimer.singleShot(1 / self.FPS, self.emulate)
+
+    def eventSaveState(self):
+        ''''''
+        msgBoxTitle = 'Error'
+        msgBoxText = 'Could not save state. Please load a ROM first.'
+        # Check if ROM is loaded
+        if self.isRunning:
+            filename = QtGui.QFileDialog.getSaveFileName(self.window, 
+                                                         'Save State',
+                                                         '',
+                                                         'State Data (*.dat)')
+            # Save the state of the CHIP-8 CPU to a file
+            if filename:
+                pickle.dump(self.CPU.get_state(), open(filename, 'wb'))
+        else:
+            # Render the error message box
+            QtGui.QMessageBox.critical(self.window, msgBoxTitle, msgBoxText,
+                                       buttons = QtGui.QMessageBox.Ok)             
+
+    def eventLoadState(self):
+        ''''''
+        filename = QtGui.QFileDialog.getOpenFileName(self.window, 'Load State',
+                                                     '',
+                                                     'State Data (*.dat)')
+        # Load the state of the CHIP-8 CPU from a file
+        if filename:
+            self.CPU.set_state(pickle.load(open(filename, 'rb')))
+            self.window.setStatusBar(self.runningStatusText)
+            self.isRunning = True
 
     def eventChangeBgColour(self):
         ''''''

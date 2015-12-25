@@ -4,7 +4,7 @@ from random import randint, seed
 
 class Chip8(object):
     '''CHIP-8 CPU implements all op code instructions and provides input and
-    functionality for tasks such as rendering and custom key input mapping.'''
+    functionality for tasks such as rendering and dynamic state loading.'''
 
     def __init__(self):
         '''Create a new CHIP-8 CPU'''
@@ -93,46 +93,42 @@ class Chip8(object):
         # Load default fontset into memory
         for i in range(80):
             self.__ram[i] = self.__font_set[i]
-            
-    def get_RAM(self):
-        '''Return the RAM buffer.'''
-        return self.__ram
     
+    def set_key_state(self, key, state):
+        '''Set the state of a key.'''
+        self.__key[key] = state
+
     def get_GFX(self):
         '''Return the graphics buffer.'''
         return self.__gfx
-    
-    def get_keys(self):
-        '''Return the key mappings.'''
-        return self.__key
-    
-    def get_stack(self):
-        '''Return the stack.'''
-        return self.__stk
-    
-    def get_registers(self):
-        '''Return the registers.'''
-        return self.__V
-    
-    def get_gen_register(self):
-        '''Return the general purpose register.'''
-        return self.__I
-    
-    def get_program_counter(self):
-        '''Return the program counter.'''
-        return self.__pc
-    
-    def get_opcode(self):
-        '''Return the current opcode.'''
-        return self.__opcode
-    
-    def get_draw_flag(self):
-        '''Return the draw flag.'''
-        return self.__is_draw
-    
-    def get_timers(self):
-        '''Return the timers.'''
-        return self.__timers
+
+    def get_state(self):
+        '''Return the state of the CPU.'''
+        data = []
+        data.append(self.__pc)
+        data.append(self.__I)
+        data.append(self.__opcode)
+        data.append(self.__timers)
+        data.append(self.__gfx)
+        data.append(self.__key)
+        data.append(self.__V)
+        data.append(self.__stk)
+        data.append(self.__ram)
+        data.append(self.__is_draw)
+        return data
+
+    def set_state(self, data):
+        '''Set the state of the CPU.'''
+        self.__pc = data[0]
+        self.__I = data[1]
+        self.__opcode = data[2]
+        self.__timers = data[3]
+        self.__gfx = data[4]
+        self.__key = data[5]
+        self.__V = data[6]
+        self.__stk = data[7]
+        self.__ram = data[8]
+        self.__is_draw = data[9]
 
     def load_rom(self, file_name):
         '''Load a file's binary data into the CPU's RAM buffer.'''
@@ -142,7 +138,7 @@ class Chip8(object):
         rom_data = file_buffer.read()
         file_buffer.close()
         # Convert file data into hex
-        hex_data = str(hexlify(rom_data))[2:]
+        hex_data = str(hexlify(rom_data))[2:] # Remove 'b from string
         # Pad string such that its length is a multiple of 4
         for i in range(len(hex_data) % 4):
             hex_data += "0"

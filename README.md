@@ -1,9 +1,9 @@
-#Python CHIP-8 CPU Emulator
+#Python CHIP-8 CPU Interpreter
 
 Description:
 -------------
 A Python based GUI implementation of the CHIP-8 system. A project I developed with the intention of gaining knowledge about emulators and cross platform GUI libraries.
-For more specific information about the CHIP-8 system, please refer to the following WIKI arricle on [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8).
+For more specific information about the CHIP-8 system, please refer to the following WIKI article on [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8).
 
 Supports:
 -------------
@@ -16,7 +16,7 @@ ROMs for the CHIP-8 system can be downloaded for free at [Chip8.com](http://www.
 
 Dependencies:
 -------------
-- `Python 3` [(Build 3.X)](https://www.python.org/downloads/)
+- `Python 3` [(Build 3.4)](https://www.python.org/downloads/)
 - `PyQt 4` [(Build 4.11)](https://riverbankcomputing.com/software/pyqt/download)
 
 Running the Emulator:

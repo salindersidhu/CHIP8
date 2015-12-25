@@ -1,8 +1,5 @@
 from PyQt4 import QtGui, QtCore
-
-class MenuException(Exception):
-    ''''''
-    pass
+from guicanvas import GUICanvas
 
 class GUIWindow(QtGui.QMainWindow):
     ''''''
@@ -13,11 +10,14 @@ class GUIWindow(QtGui.QMainWindow):
         # Window GUI variables
         self.__menubar = self.menuBar()     # Define a Menu Bar
         self.__menuDict = {}                # Define a map of Menus
+        self.__canvas = GUICanvas(self)     # Define a drawing canvas
         # Configure the window's properties
         self.setGeometry(0, 0, winWidth, winHeight)
         self.setFixedSize(winWidth, winHeight)
         self.setWindowTitle(winTitle)
         self.setWindowIcon(QtGui.QIcon(winIcon))
+        # Bind the GUI drawing canvas to the GUI window
+        self.setCentralWidget(self.__canvas)
         # Set the window to appear in the center of the screen
         self.__centerOnScreen()
         # Configure the remaining GUI elements for the window
@@ -42,7 +42,7 @@ class GUIWindow(QtGui.QMainWindow):
         ''''''
         # Check if menuTitle does not exist (prevent duplicates)
         if menuTitle in self.__menuDict:
-            raise MenuException('Menu ' + menuTitle + ' was already created!')
+            raise Exception('Menu ' + menuTitle + ' was already created!')
         else:
             self.__menuDict[menuTitle] = \
             self.__menubar.addMenu('&' + menuTitle);
@@ -59,7 +59,15 @@ class GUIWindow(QtGui.QMainWindow):
             # Add the menu items to the menu item dictionary
             self.__menuDict[menuTitle].addAction(menuItem)
         else:
-            raise MenuException('Menu ' + menuTitle + ' was not found!')
+            raise Exception('Menu ' + menuTitle + ' was not found!')
+
+    def setupDrawingGrid(self, canvasWidth, canvasHeight, pxSize):
+        ''''''
+        self.__canvas.setGrid(canvasWidth, canvasHeight, pxSize)
+        
+    def updateDrawingGrid(self, grid):
+        ''''''
+        self.__canvas.updateGrid(grid)
     
     def addMenuSeperator(self, menuTitle):
         ''''''
@@ -67,4 +75,4 @@ class GUIWindow(QtGui.QMainWindow):
         if menuTitle in self.__menuDict:
             self.__menuDict[menuTitle].addSeparator()
         else:
-            raise MenuException('Menu ' + menuTitle + ' was not found!')
+            raise Exception('Menu ' + menuTitle + ' was not found!')

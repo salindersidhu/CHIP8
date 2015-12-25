@@ -1,6 +1,6 @@
 import sys
 import pickle
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 from chip8 import Chip8
 from guiwindow import GUIWindow
 
@@ -13,10 +13,12 @@ class EmulatorApplication:
         self.isPaused = False
         self.isRomLoaded = False
         self.CPU = Chip8()
+        self.FPS = 60
+        self.timer = QtCore.QBasicTimer()
         # GUI Window variables
         self.winTitle = 'Python CHIP-8 Emulator'
-        self.winWidth = 630
-        self.winHeight = 400
+        self.winWidth = 640
+        self.winHeight = 360
         self.winIcon = 'icon.png'
         self.defaultStatus = 'Ready...'
         # Configure the application
@@ -27,8 +29,11 @@ class EmulatorApplication:
         self.window.setStatusBar(self.defaultStatus)
         self.setup_menu()
         self.setup_menu_items()
+        self.window.setupDrawingGrid(64, 32, 10)
         # Finish GUI window setup
         self.window.done()
+        # Start the CHIP-8 timed emulation
+        self.emulate()
         sys.exit(self.app.exec_())
 
     def setup_menu(self):
@@ -65,6 +70,16 @@ class EmulatorApplication:
         # Setup Help menu items
         self.window.addMenuItem('Help', 'About', 'About the application',
                                 self.event_about)
+
+    def emulate(self):
+        ''''''
+        try:
+            if self.isRomLoaded:
+                if  not self.isPaused:
+                    self.CPU.emulate_cycle()
+                    self.window.updateDrawingGrid(self.CPU.get_GFX())
+        finally:
+            QtCore.QTimer.singleShot(1 / self.FPS, self.emulate)
     
     def event_about(self):
         ''''''

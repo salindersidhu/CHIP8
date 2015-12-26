@@ -1,3 +1,5 @@
-# Python Temporary Files
+# Python temporary files
 *.pyc
 __pycache__
+# Settings file
+settings.ini

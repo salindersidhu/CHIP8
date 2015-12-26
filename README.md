@@ -21,6 +21,32 @@ Dependencies:
 
 Running the Emulator:
 -------------
+1. Clone the repo to obtain the source code
+2. Download and install `Python3`
+3. Download and install `PyQt 4`
+4. Open a `command prompt` or `console` and navigate to the cloned repo directory using the `cd` command
+5. Run the following command, `python emulator.py` to launch the emulator GUI
+6. Load a ROM to test the emulator, ensure that the ROM file has a `.c8` extension
+
+Controls:
+-------------
+The CHIP-8 system uses a `hexadecimal keyboard` that has 16 keys ranging from 0 to 9 and A to F. Keys `2`, `4`, `6` and `8` are typically used for directional input.
+
+The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Default Keybinds` used in the emulator. The key binding settings can be changed through the `settings` menu.
+
+CHIP-8 Keyboard Map
+1 | 2 | 3 | C
+:-: | :-: | :-: | :-:
+**4** | **5** | **6** | **D**
+**7** | **8** | **9** | **E**
+**A** | **0** | **B** | **F**
+
+Default Emulator Keybinds
+1 | 2 | 3 | 4
+:-: | :-: | :-: | :-:
+**Q** | **W** | **E** | **R**
+**A** | **S** | **D** | **F**
+**Z** | **X** | **C** | **V**
 
 License:
 -------------

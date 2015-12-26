@@ -1,6 +1,5 @@
 import sys
 import pickle
-import configparser
 from PyQt4 import QtGui, QtCore
 from chip8 import Chip8
 from guiwindow import GUIWindow
@@ -77,17 +76,17 @@ class EmulatorApplication:
     def setupKeyBindings(self):
         ''''''
         self.keyBindings[QtCore.Qt.Key_1] = [
-            lambda: self.CPU.set_key_state(0, 1),
-            lambda: self.CPU.set_key_state(0, 0)]
-        self.keyBindings[QtCore.Qt.Key_2] = [
             lambda: self.CPU.set_key_state(1, 1),
             lambda: self.CPU.set_key_state(1, 0)]
-        self.keyBindings[QtCore.Qt.Key_3] = [
+        self.keyBindings[QtCore.Qt.Key_2] = [
             lambda: self.CPU.set_key_state(2, 1),
             lambda: self.CPU.set_key_state(2, 0)]
-        self.keyBindings[QtCore.Qt.Key_4] = [
+        self.keyBindings[QtCore.Qt.Key_3] = [
             lambda: self.CPU.set_key_state(3, 1),
             lambda: self.CPU.set_key_state(3, 0)]
+        self.keyBindings[QtCore.Qt.Key_4] = [
+            lambda: self.CPU.set_key_state(12, 1),
+            lambda: self.CPU.set_key_state(12, 0)]
         self.keyBindings[QtCore.Qt.Key_Q] = [
             lambda: self.CPU.set_key_state(4, 1),
             lambda: self.CPU.set_key_state(4, 0)]
@@ -98,29 +97,29 @@ class EmulatorApplication:
             lambda: self.CPU.set_key_state(6, 1),
             lambda: self.CPU.set_key_state(6, 0)]
         self.keyBindings[QtCore.Qt.Key_R] = [
-            lambda: self.CPU.set_key_state(7, 1),
-            lambda: self.CPU.set_key_state(7, 0)]
-        self.keyBindings[QtCore.Qt.Key_A] = [
-            lambda: self.CPU.set_key_state(8, 1),
-            lambda: self.CPU.set_key_state(8, 0)]
-        self.keyBindings[QtCore.Qt.Key_S] = [
-            lambda: self.CPU.set_key_state(9, 1),
-            lambda: self.CPU.set_key_state(9, 0)]
-        self.keyBindings[QtCore.Qt.Key_D] = [
-            lambda: self.CPU.set_key_state(10, 1),
-            lambda: self.CPU.set_key_state(10, 0)]
-        self.keyBindings[QtCore.Qt.Key_F] = [
-            lambda: self.CPU.set_key_state(11, 1),
-            lambda: self.CPU.set_key_state(11, 0)]
-        self.keyBindings[QtCore.Qt.Key_Z] = [
-            lambda: self.CPU.set_key_state(12, 1),
-            lambda: self.CPU.set_key_state(12, 0)]
-        self.keyBindings[QtCore.Qt.Key_X] = [
             lambda: self.CPU.set_key_state(13, 1),
             lambda: self.CPU.set_key_state(13, 0)]
-        self.keyBindings[QtCore.Qt.Key_C] = [
+        self.keyBindings[QtCore.Qt.Key_A] = [
+            lambda: self.CPU.set_key_state(7, 1),
+            lambda: self.CPU.set_key_state(7, 0)]
+        self.keyBindings[QtCore.Qt.Key_S] = [
+            lambda: self.CPU.set_key_state(8, 1),
+            lambda: self.CPU.set_key_state(8, 0)]
+        self.keyBindings[QtCore.Qt.Key_D] = [
+            lambda: self.CPU.set_key_state(9, 1),
+            lambda: self.CPU.set_key_state(9, 0)]
+        self.keyBindings[QtCore.Qt.Key_F] = [
             lambda: self.CPU.set_key_state(14, 1),
             lambda: self.CPU.set_key_state(14, 0)]
+        self.keyBindings[QtCore.Qt.Key_Z] = [
+            lambda: self.CPU.set_key_state(10, 1),
+            lambda: self.CPU.set_key_state(10, 0)]
+        self.keyBindings[QtCore.Qt.Key_X] = [
+            lambda: self.CPU.set_key_state(0, 1),
+            lambda: self.CPU.set_key_state(0, 0)]
+        self.keyBindings[QtCore.Qt.Key_C] = [
+            lambda: self.CPU.set_key_state(11, 1),
+            lambda: self.CPU.set_key_state(11, 0)]
         self.keyBindings[QtCore.Qt.Key_V] = [
             lambda: self.CPU.set_key_state(15, 1),
             lambda: self.CPU.set_key_state(15, 0)]

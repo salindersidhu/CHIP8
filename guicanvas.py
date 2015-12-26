@@ -52,9 +52,9 @@ class GUICanvas(QtGui.QFrame):
     def paintEvent(self, event):
         ''''''
         painter = QtGui.QPainter(self)
-        #
+        # Clear the GUI canvas
         painter.eraseRect(0, 0, self.width(), self.height())
-        #
+        # Draw the pixels on the GUI canvas
         for y in range(self.__gridHeight):
             for x in range(self.__gridWidth):
                 if self.__grid[x][y]:

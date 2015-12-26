@@ -3,8 +3,9 @@ import pickle
 from PyQt4 import QtGui, QtCore
 from chip8 import Chip8
 from guiwindow import GUIWindow
+from settings import Settings
 
-class EmulatorApplication:
+class Emulator:
     ''''''
 
     def __init__(self):
@@ -16,8 +17,9 @@ class EmulatorApplication:
         self.FPS = 60
         self.timer = QtCore.QBasicTimer()
         self.keyBindings = {}
+        self.settings = Settings('settings.ini')
         # GUI Window variables
-        self.winTitle = 'Python CHIP-8 Emulator'
+        self.winTitle = 'Python CHIP-8 Interpreter'
         self.winWidth = 640
         self.winHeight = 360
         self.canvasPxWidth = 64
@@ -32,6 +34,7 @@ class EmulatorApplication:
         # Configure the GUI window
         self.window = GUIWindow(self.winTitle, self.winWidth, self.winHeight,
                                 self.winIcon)
+        self.loadSettings()
         self.setupMenu()
         self.setupMenuItems()
         self.setupKeyBindings()
@@ -43,6 +46,35 @@ class EmulatorApplication:
         # Start the CHIP-8 timed emulation
         self.emulate()
         sys.exit(self.app.exec_())
+
+    def loadSettings(self):
+        ''''''
+        # Save default settings to file if they no settings data exists
+        if self.settings.isEmpty():
+            defaults = {}
+            # Get the default value for the pixel colour
+            defaultPxColours = self.window.getDrawingGridPxColour()
+            defaults['pxcolr'] = defaultPxColours[0]
+            defaults['pxcolg'] = defaultPxColours[1]
+            defaults['pxcolb'] = defaultPxColours[2]
+            # Get the  default value for the background color
+            defaultBgColours = self.window.getDrawingGridBgColour()
+            defaults['bgcolr'] = defaultBgColours[0]
+            defaults['bgcolg'] = defaultBgColours[1]
+            defaults['bgcolb'] = defaultBgColours[2]
+            # Add and save default settings
+            self.settings.addNewSetting('DEFAULT', defaults)
+        else:
+            # Load settings for pixel colour
+            pxRed = int(self.settings.getSetting('DEFAULT', 'pxcolr'))
+            pxGreen = int(self.settings.getSetting('DEFAULT', 'pxcolg'))
+            pxBlue = int(self.settings.getSetting('DEFAULT', 'pxcolb'))
+            self.window.setDrawingGridPxColour((pxRed, pxGreen, pxBlue))
+            # Load settings for background colour
+            bgRed = int(self.settings.getSetting('DEFAULT', 'bgcolr'))
+            bgGreen = int(self.settings.getSetting('DEFAULT', 'bgcolg'))
+            bgBlue = int(self.settings.getSetting('DEFAULT', 'bgcolb'))
+            self.window.setDrawingGridBgColour((bgRed, bgGreen, bgBlue))
 
     def setupMenu(self):
         ''''''
@@ -170,6 +202,10 @@ class EmulatorApplication:
         if newCol.isValid():
             newBgColour = (newCol.red(), newCol.green(), newCol.blue())
             self.window.setDrawingGridBgColour(newBgColour)
+            # Save the background colour to settings
+            self.settings.editSetting('DEFAULT', 'bgcolr', newCol.red())
+            self.settings.editSetting('DEFAULT', 'bgcolg', newCol.green())
+            self.settings.editSetting('DEFAULT', 'bgcolb', newCol.blue())
 
     def eventChangePxColour(self):
         ''''''
@@ -178,6 +214,10 @@ class EmulatorApplication:
         if newCol.isValid():
             newPxColour = (newCol.red(), newCol.green(), newCol.blue())
             self.window.setDrawingGridPxColour(newPxColour)
+            # Save the pixel colour to settings
+            self.settings.editSetting('DEFAULT', 'pxcolr', newCol.red())
+            self.settings.editSetting('DEFAULT', 'pxcolg', newCol.green())
+            self.settings.editSetting('DEFAULT', 'pxcolb', newCol.blue())            
 
     def selectColour(self, defColour):
         ''''''
@@ -205,7 +245,7 @@ class EmulatorApplication:
     def eventAbout(self):
         ''''''
         msgBoxTitle = 'About'
-        msgBoxText = 'Python CHIP-8 CPU Emulator.\nPython 3 and PyQt 4' + \
+        msgBoxText = 'Python CHIP-8 CPU Interpreter\nPython 3 and PyQt 4' + \
             '\n\nCopyright (C) 2015 Salinder Sidhu'
         # Render the message box
         QtGui.QMessageBox.information(self.window, msgBoxTitle, msgBoxText,
@@ -223,4 +263,4 @@ class EmulatorApplication:
             self.isRunning = True
 
 if __name__ == '__main__':
-    EmulatorApplication()
+    Emulator()

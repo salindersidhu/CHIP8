@@ -34,7 +34,7 @@ The CHIP-8 system uses a `hexadecimal keyboard` that has 16 keys ranging from 0 
 
 The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Default Keybinds` used in the emulator. The key binding settings can be changed through the `settings` menu.
 
-<center>
+<div align="center">
 	<table style="display:inline-block;">
 		<caption>CHIP-8 Keyboard</caption>
 		<tr>
@@ -90,7 +90,7 @@ The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Default Ke
 			<td><b>V</b></td>
 		</tr>
 	</table>
-</center>
+</div>
 
 License:
 -------------

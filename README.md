@@ -34,19 +34,63 @@ The CHIP-8 system uses a `hexadecimal keyboard` that has 16 keys ranging from 0 
 
 The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Default Keybinds` used in the emulator. The key binding settings can be changed through the `settings` menu.
 
-CHIP-8 Keyboard Map
-1 | 2 | 3 | C
-:-: | :-: | :-: | :-:
-**4** | **5** | **6** | **D**
-**7** | **8** | **9** | **E**
-**A** | **0** | **B** | **F**
-
-Default Emulator Keybinds
-1 | 2 | 3 | 4
-:-: | :-: | :-: | :-:
-**Q** | **W** | **E** | **R**
-**A** | **S** | **D** | **F**
-**Z** | **X** | **C** | **V**
+<center>
+	<table style="display:inline-block;">
+		<caption>CHIP-8 Keyboard</caption>
+		<tr>
+			<td><b>1</b></td>
+			<td><b>2</b></td>
+			<td><b>3</b></td>
+			<td><b>C</b></td>
+		</tr>
+		<tr>
+			<td><b>4</b></td>
+			<td><b>5</b></td>
+			<td><b>6</b></td>
+			<td><b>D</b></td>
+		</tr>
+		<tr>
+			<td><b>7</b></td>
+			<td><b>8</b></td>
+			<td><b>9</b></td>
+			<td><b>E</b></td>
+		</tr>
+		<tr>
+			<td><b>A</b></td>
+			<td><b>0</b></td>
+			<td><b>B</b></td>
+			<td><b>F</b></td>
+		</tr>
+	</table>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<table style="display:inline-block;">
+		<caption>Default Keybinds</caption>
+		<tr>
+			<td><b>1</b></td>
+			<td><b>2</b></td>
+			<td><b>3</b></td>
+			<td><b>C</b></td>
+		</tr>
+		<tr>
+			<td><b>Q</b></td>
+			<td><b>W</b></td>
+			<td><b>E</b></td>
+			<td><b>R</b></td>
+		</tr>
+		<tr>
+			<td><b>A</b></td>
+			<td><b>S</b></td>
+			<td><b>D</b></td>
+			<td><b>F</b></td>
+		</tr>
+		<tr>
+			<td><b>Z</b></td>
+			<td><b>X</b></td>
+			<td><b>C</b></td>
+			<td><b>V</b></td>
+		</tr>
+	</table>
+</center>
 
 License:
 -------------

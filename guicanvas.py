@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
 class GUICanvas(QtGui.QFrame):
     ''''''
@@ -14,6 +14,8 @@ class GUICanvas(QtGui.QFrame):
         # Default pixel and background colours for the grid
         self.__pxColour = (255, 255, 255)
         self.__bgColour = (0, 0, 0)
+        # Set strong policy for focusing keyboard events to canvas
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
 
     def setGrid(self, width, height, pxSize):
         ''''''

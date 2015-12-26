@@ -3,11 +3,11 @@ from binascii import hexlify
 from random import randint, seed
 
 class Chip8(object):
-    '''CHIP-8 CPU implements all op code instructions and provides input and
+    '''CHIP-8 implements all op code instructions and provides input and
     functionality for tasks such as rendering and dynamic state loading.'''
 
     def __init__(self):
-        '''Create a new CHIP-8 CPU'''
+        '''Create a new CHIP-8 object.'''
         self.__pc = 0 # Program counter
         self.__I = 0 # General purpose register
         self.__opcode = 0 # Operation code (string)
@@ -16,7 +16,7 @@ class Chip8(object):
         self.__gfx = [[]] # 2D graphics list [x][y]
         self.__key = [] # I/O key list
         self.__stk = Stack() # The main stack
-        self.__ram = [] # Main memory for CPU
+        self.__ram = [] # Main memory
         self.__V = [] # Registers
         # The font set, used to draw plaintext characters
         self.__font_set = ["F0", "90", "90", "90", "F0",
@@ -77,10 +77,9 @@ class Chip8(object):
                                "65":self.__inst_0xFX65}
 
     def reset(self):
-        '''Reset the CHIP-8 CPU to it's original state and clear all, stacks,
-        registers, graphics buffers, key mappings, timers, RAM buffer and
-        program counter.'''
-        # Reset CPU
+        '''Reset the CHIP-8 system to it's original state. Clear all registers, 
+        graphics buffers, key mappings, timers, RAM buffer, stack and program
+        counter.'''
         self.__pc = 512
         self.__I = 0
         self.__opcode = 0
@@ -102,10 +101,12 @@ class Chip8(object):
 
     def get_GFX(self):
         '''Return the graphics buffer.'''
-        return self.__gfx
+        # Check if the graphics buffer has been initialized
+        if self.__gfx:
+            return self.__gfx
 
     def get_state(self):
-        '''Return the state of the CPU.'''
+        '''Return the state of the system.'''
         data = []
         data.append(self.__pc)
         data.append(self.__I)
@@ -120,7 +121,7 @@ class Chip8(object):
         return data
 
     def set_state(self, data):
-        '''Set the state of the CPU.'''
+        '''Set the state of the system.'''
         self.__pc = data[0]
         self.__I = data[1]
         self.__opcode = data[2]
@@ -133,7 +134,7 @@ class Chip8(object):
         self.__is_draw = data[9]
 
     def load_rom(self, file_name):
-        '''Load a file's binary data into the CPU's RAM buffer.'''
+        '''Load a file's binary data into the system's RAM buffer.'''
         self.reset()
         # Load data from file in bin mode
         file_buffer = open(file_name, "rb")
@@ -149,7 +150,7 @@ class Chip8(object):
             self.__ram[int(i / 2) + 512] = hex_data[i:i + 2]
 
     def emulate_cycle(self):
-        '''Emulate a CPU cycle. Fetch the next instruction from RAM, decode
+        '''Emulate a system cycle. Fetch the next instruction from RAM, decode
         the instruction using the opcode table and execute the instruction.'''
         # Fetch opcode
         self.__opcode = self.__ram[self.__pc] + self.__ram[self.__pc + 1]

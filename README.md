@@ -1,4 +1,4 @@
-#Python CHIP-8 CPU Interpreter
+#Python CHIP-8 Interpreter
 
 Description:
 -------------
@@ -12,27 +12,27 @@ Supports:
 
 ROMs:
 -------------
-ROMs for the CHIP-8 system can be downloaded for free at [Chip8.com](http://www.chip8.com/?page=84) and [Zophar's Domain](http://www.zophar.net/pdroms/chip8.html). In order to load these ROMs with the emulator, the files must be renamed to have a `.c8` extension.
+ROMs for the CHIP-8 system can be downloaded for free at [Chip8.com](http://www.chip8.com/?page=84) and [Zophar's Domain](http://www.zophar.net/pdroms/chip8.html). In order to load these ROMs with the interpreter, the files must be renamed to have a `.c8` extension.
 
 Dependencies:
 -------------
 - `Python 3` [(Build 3.4)](https://www.python.org/downloads/)
 - `PyQt 4` [(Build 4.11)](https://riverbankcomputing.com/software/pyqt/download)
 
-Running the Emulator:
+Running the Interpreter:
 -------------
 1. Clone the repo to obtain the source code
 2. Download and install `Python3`
 3. Download and install `PyQt 4`
-4. Open a `command prompt` or `console` and navigate to the cloned repo directory using the `cd` command
-5. Run the following command, `python emulator.py` to launch the emulator GUI
-6. Load a ROM to test the emulator, ensure that the ROM file has a `.c8` extension
+4. Open a `command prompt` or `console` and navigate to the cloned repo's directory using the `cd` command
+5. Run the following command, `python interpreterapp.py` to launch the emulator GUI
+6. Load a ROM to test the interpreter, ensure that the ROM file has a `.c8` extension
 
 Controls:
 -------------
-The CHIP-8 system uses a `hexadecimal keyboard` that has 16 keys ranging from 0 to 9 and A to F. Keys `2`, `4`, `6` and `8` are typically used for directional input.
+The CHIP-8 system uses a `hexadecimal keyboard` that has 16 keys from 0 to 9 and A to F. Keys `2`, `4`, `6` and `8` are typically used for directional input.
 
-The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Default Keybinds` used in the emulator. The key binding settings can be changed through the `settings` menu.
+The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Default Keybinds` used in the interpreter. The keybind settings can be changed through the `settings` menu.
 
 <table>
 	<caption>CHIP-8 Keyboard</caption>

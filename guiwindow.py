@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
 from guicanvas import GUICanvas
 
 class GUIWindow(QtGui.QMainWindow):

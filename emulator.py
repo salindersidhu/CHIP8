@@ -45,7 +45,6 @@ class Emulator:
         self.window.done()
         # Start the CHIP-8 timed emulation
         self.emulate()
-        sys.exit(self.app.exec_())
 
     def loadSettings(self):
         ''''''
@@ -157,6 +156,16 @@ class Emulator:
             lambda: self.CPU.set_key_state(15, 0)]
         self.window.updateKeyBindings(self.keyBindings)
 
+    def pauseEmulator(self, action=True):
+        ''''''
+        if self.isRunning:
+            self.isPaused = action
+            # Set the status bar text depending on the state of the emulator
+            if self.isPaused:
+                self.window.setStatusBar(self.pausedStatusText)
+            else:
+                self.window.setStatusBar(self.runningStatusText)
+
     def emulate(self):
         ''''''
         try:
@@ -172,10 +181,14 @@ class Emulator:
         msgBoxText = 'Could not save state. Please load a ROM first.'
         # Check if ROM is loaded
         if self.isRunning:
+            # Pause emulator while dialog is shown
+            self.pauseEmulator()
             filename = QtGui.QFileDialog.getSaveFileName(self.window, 
                                                          'Save State',
                                                          '',
                                                          'State Data (*.dat)')
+            # Resume emulator when dialog is closed
+            self.pauseEmulator(False)
             # Save the state of the CHIP-8 CPU to a file
             if filename:
                 pickle.dump(self.CPU.get_state(), open(filename, 'wb'))
@@ -186,9 +199,13 @@ class Emulator:
 
     def eventLoadState(self):
         ''''''
+        # Pause emulator while dialog is shown
+        self.pauseEmulator()
         filename = QtGui.QFileDialog.getOpenFileName(self.window, 'Load State',
                                                      '',
                                                      'State Data (*.dat)')
+        # Resume emulator when dialog is closed
+        self.pauseEmulator(False)
         # Load the state of the CHIP-8 CPU from a file
         if filename:
             self.CPU.set_state(pickle.load(open(filename, 'rb')))
@@ -217,22 +234,23 @@ class Emulator:
             # Save the pixel colour to settings
             self.settings.editSetting('DEFAULT', 'pxcolr', newCol.red())
             self.settings.editSetting('DEFAULT', 'pxcolg', newCol.green())
-            self.settings.editSetting('DEFAULT', 'pxcolb', newCol.blue())            
+            self.settings.editSetting('DEFAULT', 'pxcolb', newCol.blue())
 
     def selectColour(self, defColour):
         ''''''
-        colour = QtGui.QColor(defColour[0], defColour[1], defColour[2])
-        return QtGui.QColorDialog.getColor(colour, self.window)
+        # Pause emulator while dialog is shown
+        self.pauseEmulator()
+        color = QtGui.QColorDialog.getColor(QtGui.QColor(defColour[0], 
+                                                         defColour[1], 
+                                                         defColour[2]), 
+                                            self.window)
+        # Resume emulator when dialog is closed
+        self.pauseEmulator(False)
+        return color
 
     def eventPauseResume(self):
         ''''''
-        if self.isRunning:
-            self.isPaused = not self.isPaused
-            # Set the status bar text depending on the state of the emulator
-            if self.isPaused:
-                self.window.setStatusBar(self.pausedStatusText)
-            else:
-                self.window.setStatusBar(self.runningStatusText)
+        self.pauseEmulator(not self.isPaused)
 
     def eventReset(self):
         ''''''
@@ -244,23 +262,33 @@ class Emulator:
 
     def eventAbout(self):
         ''''''
+        # Pause emulator while dialog is shown
+        self.pauseEmulator()
         msgBoxTitle = 'About'
         msgBoxText = 'Python CHIP-8 CPU Interpreter\nPython 3 and PyQt 4' + \
             '\n\nCopyright (C) 2015 Salinder Sidhu'
         # Render the message box
-        QtGui.QMessageBox.information(self.window, msgBoxTitle, msgBoxText,
-                                      buttons = QtGui.QMessageBox.Ok)
+        dialog = QtGui.QMessageBox.information(self.window, msgBoxTitle,
+                                               msgBoxText,
+                                               buttons = QtGui.QMessageBox.Ok)
+        # Resume emulator when dialog is closed
+        self.pauseEmulator(False)
  
     def eventLoadROM(self):
         ''''''
+        # Pause emulator while dialog is shown
+        self.pauseEmulator()
         filename = QtGui.QFileDialog.getOpenFileName(self.window,
                                                      'Open File',
                                                      '', 'CHIP8 ROM (*.c8)')
-        # Load the CHIP-8 ROM if the filename exists
+        # Resume emulator when dialog is closed
+        self.pauseEmulator(False)
+        # Load the CHIP-8 ROM if the filename exists        
         if filename:
             self.CPU.load_rom(filename)
             self.window.setStatusBar(self.runningStatusText)
             self.isRunning = True
 
 if __name__ == '__main__':
-    Emulator()
+    myApp = Emulator()
+    sys.exit(myApp.app.exec_())

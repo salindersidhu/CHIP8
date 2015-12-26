@@ -75,8 +75,6 @@ class GUIWindow(QtGui.QMainWindow):
             menuItem = QtGui.QAction('&' + menuItem, self)
             if evtFunction:
                 menuItem.triggered.connect(lambda: evtFunction())
-            else:
-                menuItem.triggered.connect(lambda: self.defaultEvent())
             # Add the menu items to the menu item dictionary
             self.__menuDict[menuTitle].addAction(menuItem)
         else:

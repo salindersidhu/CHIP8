@@ -9,10 +9,13 @@ from guiwindow import GUIWindow
 
 
 class InterpreterApp(QtGui.QApplication):
-    ''''''
+    '''InterpreterApp extends the QtGui.QApplication class. This class creates
+    the GUI for the CHIP-8 interpreter system and provides functions for all
+    of the application's events. It uses GridFrame and GUIWindow  to create the
+    window, menu and status bars and the drawing grid frame required.'''
 
     def __init__(self, args):
-        ''''''
+        '''Create a new InterpreterApp with arguments specified by args.'''
         super(InterpreterApp, self).__init__(args)
         # Application variables
         self.__FPS = 60
@@ -45,7 +48,8 @@ class InterpreterApp(QtGui.QApplication):
         self.__emulate()
 
     def __loadSettings(self):
-        ''''''
+        '''Load settings for the GridFrame's pixel colour and background
+        colour.'''
         # Save default settings to file if they no settings data exists
         if self.__settings.isEmpty():
             defaults = {}
@@ -74,14 +78,15 @@ class InterpreterApp(QtGui.QApplication):
             self.__gridFrame.changeBackgroundColour((bgRed, bgGreen, bgBlue))
 
     def __setupMenu(self):
-        ''''''
+        '''Add all the menus used in the application to GUIWindow.'''
         self.__window.addMenu('File')
         self.__window.addMenu('Options')
         self.__window.addMenu('Settings')
         self.__window.addMenu('Help')
 
     def __setupMenuItems(self):
-        ''''''
+        '''Add all the menu items, along with their event functions, used in
+        the application to GUIWindow.'''
         # Setup File menu items
         self.__window.addMenuItem('File', 'Load ROM', self.__eventLoadROM)
         self.__window.addMenuSeperator('File')
@@ -104,7 +109,9 @@ class InterpreterApp(QtGui.QApplication):
         self.__window.addMenuItem('Help', 'About', self.__eventAbout)
 
     def __setupKeyBindings(self):
-        ''''''
+        '''Configure the key bindings for the CHIP-8 controller using the
+        keys, 1, 2, 3, 4, q, w, e, r, a, s, d, f, z, x, c and v in order
+        corresponding to the rows of the original CHIP-8 input controller.'''
         self.__keyBindings[QtCore.Qt.Key_1] = [
             lambda: self.__chip8.setKeyState(1, 1),
             lambda: self.__chip8.setKeyState(1, 0)]
@@ -155,17 +162,21 @@ class InterpreterApp(QtGui.QApplication):
             lambda: self.__chip8.setKeyState(15, 0)]
         self.__window.updateKeyBindings(self.__keyBindings)
 
-    def __logExceptionToFile(self, exceptionMessage):
-        ''''''
+    def __logExceptionToFile(self, exceptionTrace):
+        '''Display an error message and write the exception trace to a
+        specified log file.'''
         message = 'The application has crashed!\n\nPlease refer to ' + \
             self.__debugLog + ' for more information!'
         QtGui.QMessageBox.critical(self.__window, 'Error', message,
                                    buttons=QtGui.QMessageBox.Ok)
         debugFile = open(self.__debugLog, 'w')
-        debugFile.write(exceptionMessage)
+        debugFile.write(exceptionTrace)
 
     def __emulate(self):
-        ''''''
+        '''Emulate the CHIP-8 system using a timer that executes some number
+        of times per second specified by the framerate. Process CHIP-8
+        instructions and pixel rendering. Halt the system if an exception is
+        caught and log the exception to a file.'''
         try:
             if self.__isRunning and not self.__isPaused:
                 self.__chip8.emulateCycle()
@@ -179,7 +190,8 @@ class InterpreterApp(QtGui.QApplication):
             QtCore.QTimer.singleShot(1 / self.__FPS, self.__emulate)
 
     def __selectColour(self, defColour):
-        ''''''
+        '''Open a colour selection dialog and return a new QColor if a new
+        colour was selected.'''
         # Pause interpreter while dialog is shown
         self.__pauseEmulator()
         color = QtGui.QColorDialog.getColor(QtGui.QColor(defColour[0],
@@ -191,7 +203,8 @@ class InterpreterApp(QtGui.QApplication):
         return color
 
     def __pauseEmulator(self, action=True):
-        ''''''
+        '''Pause the emulator and modify the StatusBar text to reflect the
+        state of the application.'''
         if self.__isRunning:
             self.__isPaused = action
             # Set the status text (paused or running)
@@ -201,7 +214,9 @@ class InterpreterApp(QtGui.QApplication):
                 self.__window.setStatusBar(self.__runStatus)
 
     def __eventSaveState(self):
-        ''''''
+        '''Display a save file dialog and save the current state of the CHIP-8
+        system to the specified file. Display an error message otherwise if not
+        ROM is loaded.'''
         # Check if ROM is loaded
         if self.__isRunning:
             # Pause interpreter while dialog is shown
@@ -221,7 +236,8 @@ class InterpreterApp(QtGui.QApplication):
                                        buttons=QtGui.QMessageBox.Ok)
 
     def __eventLoadState(self):
-        ''''''
+        '''Display an open file dialog and load the state of a previously saved
+        state of the CHIP-8 system from the specified file.'''
         # Pause interpreter while dialog is shown
         self.__pauseEmulator()
         filename = QtGui.QFileDialog.getOpenFileName(self.__window,
@@ -236,7 +252,8 @@ class InterpreterApp(QtGui.QApplication):
             self.__isRunning = True
 
     def __eventChangeBgColour(self):
-        ''''''
+        '''Change the current value of the GridFrame's pixel colour and save
+        the updated setting.'''
         newCol = self.__selectColour(self.__gridFrame.getBackgroundColour())
         # Verify that the new background colour is valid
         if newCol.isValid():
@@ -248,7 +265,8 @@ class InterpreterApp(QtGui.QApplication):
             self.__settings.editSetting('DEFAULT', 'bgcolb', newCol.blue())
 
     def __eventChangePxColour(self):
-        ''''''
+        '''Change the current value of the GridFrame's background colour and
+        save the updated setting.'''
         newCol = self.__selectColour(self.__gridFrame.getPixelColour())
         # Verify that the new pixel colour is valid
         if newCol.isValid():
@@ -260,11 +278,13 @@ class InterpreterApp(QtGui.QApplication):
             self.__settings.editSetting('DEFAULT', 'pxcolb', newCol.blue())
 
     def __eventPauseResume(self):
-        ''''''
+        '''Pause the CHIP-8 system if it is current running, otherwise resume
+        the state of the CHIP-8 system if it is paused.'''
         self.__pauseEmulator(not self.__isPaused)
 
     def __eventReset(self):
-        ''''''
+        '''Reset the current state of the emulator by clearing all the pixels
+        in GridFrame and restoring the CHIP-8 system to it's initial state.'''
         if self.__isRunning:
             self.__gridFrame.clearPixels()
             self.__chip8.reset()
@@ -272,7 +292,8 @@ class InterpreterApp(QtGui.QApplication):
             self.__isPaused = self.__isRunning = False
 
     def __eventAbout(self):
-        ''''''
+        '''Display an information dialog about the program languages and tools
+        used to create this application and the name of the developer.'''
         # Pause interpreter while dialog is shown
         self.__pauseEmulator()
         message = 'Python CHIP-8 CPU Interpreter\nPython 3 and PyQt 4\n\n' + \
@@ -284,7 +305,8 @@ class InterpreterApp(QtGui.QApplication):
         self.__pauseEmulator(False)
 
     def __eventLoadROM(self):
-        ''''''
+        '''Display a open file dialog and load a ROM from the file specified
+        into the CHIP-8 system.'''
         # Pause interpreter while dialog is shown
         self.__pauseEmulator()
         filename = QtGui.QFileDialog.getOpenFileName(self.__window,

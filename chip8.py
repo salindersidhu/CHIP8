@@ -2,22 +2,23 @@ from stack import Stack
 from binascii import hexlify
 from random import randint, seed
 
+
 class Chip8(object):
     '''CHIP-8 implements all op code instructions and provides input and
     functionality for tasks such as rendering and dynamic state loading.'''
 
     def __init__(self):
         '''Create a new CHIP-8 object.'''
-        self.__pc = 0 # Program counter
-        self.__I = 0 # General purpose register
-        self.__opCode = 0 # Operation code (string)
-        self.__timers = [0, 0] # Timers [delay, sound]
-        self.__isDraw = True # Control when drawing should occur
-        self.__gfx = [[]] # 2D graphics list [x][y]
-        self.__key = [] # I/O key list
-        self.__stk = Stack() # The main stack
-        self.__ram = [] # Main memory
-        self.__V = [] # Registers
+        self.__pc = 0               # Program counter
+        self.__I = 0                # General purpose register
+        self.__opCode = 0           # Operation code (string)
+        self.__timers = [0, 0]      # Timers [delay, sound]
+        self.__isDraw = True        # Control when drawing should occur
+        self.__gfx = [[]]           # 2D graphics list [x][y]
+        self.__key = []             # I/O key list
+        self.__stk = Stack()        # The main stack
+        self.__ram = []             # Main memory
+        self.__V = []               # Registers
         # The font set, used to draw plaintext characters
         self.__fontSet = ['F0', '90', '90', '90', 'F0',
                           '20', '60', '20', '20', '70',
@@ -36,48 +37,48 @@ class Chip8(object):
                           'F0', '80', 'F0', '80', 'F0',
                           'F0', '80', 'F0', '80', '80']
         # Opcode instruction jump tables
-        self.__opCodeTable = {'0':self.__inst0x0NNN,
-                              '1':self.__inst0x1NNN,
-                              '2':self.__inst0x2NNN,
-                              '3':self.__inst0x3XNN,
-                              '4':self.__inst0x4XNN,
-                              '5':self.__inst0x5XY0,
-                              '6':self.__inst0x6XNN,
-                              '7':self.__inst0x7XNN,
-                              '8':self.__inst0x8NNN,
-                              '9':self.__inst0x9XY0,
-                              'a':self.__inst0xANNN,
-                              'b':self.__inst0xBNNN,
-                              'c':self.__inst0xCXNN,
-                              'd':self.__inst0xDXYN,
-                              'e':self.__inst0xENNN,
-                              'f':self.__inst0xFNNN}
-        self.__table0x0NNN = {'e0':self.__inst0x00E0,
-                              'ee':self.__inst0x00EE}
-        self.__table0x8NNN = {'0':self.__inst0x8XY0,
-                              '1':self.__inst0x8XY1,
-                              '2':self.__inst0x8XY2,
-                              '3':self.__inst0x8XY3,
-                              '4':self.__inst0x8XY4,
-                              '5':self.__inst0x8XY5,
-                              '6':self.__inst0x8XY6,
-                              '7':self.__inst0x8XY7,
-                              'e':self.__inst0x8XYE}
-        self.__table0xENNN = {'9e':self.__inst0xEX9E,
-                              'a1':self.__inst0xEXA1}
-        self.__table0xFNNN = {'07':self.__inst0xFX07,
-                              '0a':self.__inst0xFX0A,
-                              '15':self.__inst0xFX15,
-                              '18':self.__inst0xFX18,
-                              '1e':self.__inst0xFX18,
-                              '1e':self.__inst0xFX1E,
-                              '29':self.__inst0xFX29,
-                              '33':self.__inst0xFX33,
-                              '55':self.__inst0xFX55,
-                              '65':self.__inst0xFX65}
+        self.__opCodeTable = {'0': self.__inst0x0NNN,
+                              '1': self.__inst0x1NNN,
+                              '2': self.__inst0x2NNN,
+                              '3': self.__inst0x3XNN,
+                              '4': self.__inst0x4XNN,
+                              '5': self.__inst0x5XY0,
+                              '6': self.__inst0x6XNN,
+                              '7': self.__inst0x7XNN,
+                              '8': self.__inst0x8NNN,
+                              '9': self.__inst0x9XY0,
+                              'a': self.__inst0xANNN,
+                              'b': self.__inst0xBNNN,
+                              'c': self.__inst0xCXNN,
+                              'd': self.__inst0xDXYN,
+                              'e': self.__inst0xENNN,
+                              'f': self.__inst0xFNNN}
+        self.__table0x0NNN = {'e0': self.__inst0x00E0,
+                              'ee': self.__inst0x00EE}
+        self.__table0x8NNN = {'0': self.__inst0x8XY0,
+                              '1': self.__inst0x8XY1,
+                              '2': self.__inst0x8XY2,
+                              '3': self.__inst0x8XY3,
+                              '4': self.__inst0x8XY4,
+                              '5': self.__inst0x8XY5,
+                              '6': self.__inst0x8XY6,
+                              '7': self.__inst0x8XY7,
+                              'e': self.__inst0x8XYE}
+        self.__table0xENNN = {'9e': self.__inst0xEX9E,
+                              'a1': self.__inst0xEXA1}
+        self.__table0xFNNN = {'07': self.__inst0xFX07,
+                              '0a': self.__inst0xFX0A,
+                              '15': self.__inst0xFX15,
+                              '18': self.__inst0xFX18,
+                              '1e': self.__inst0xFX18,
+                              '1e': self.__inst0xFX1E,
+                              '29': self.__inst0xFX29,
+                              '33': self.__inst0xFX33,
+                              '55': self.__inst0xFX55,
+                              '65': self.__inst0xFX65}
 
     def reset(self):
-        '''Reset the CHIP-8 system to it's original state. Clear all registers, 
+        '''Reset the CHIP-8 system to it's original state. Clear all registers,
         graphics buffers, key mappings, timers, RAM buffer, stack and program
         counter.'''
         self.__pc = 512
@@ -141,7 +142,7 @@ class Chip8(object):
         romData = fileBuffer.read()
         fileBuffer.close()
         # Convert file data into hex
-        hexData = str(hexlify(romData))[2:] # Remove 'b from string
+        hexData = str(hexlify(romData))[2:]  # Remove 'b from string
         # Pad string such that its length is a multiple of 4
         for i in range(len(hexData) % 4):
             hexData += '0'
@@ -214,7 +215,7 @@ class Chip8(object):
     def __inst0x5XY0(self):
         '''0x5XY0: Skips the next instruction if VX equals VY.'''
         if self.__V[int(self.__opCode[1], 16)] == \
-           self.__V[int(self.__opCode[2] ,16)]:
+           self.__V[int(self.__opCode[2], 16)]:
             self.__pc += 4
         else:
             self.__pc += 2
@@ -227,7 +228,7 @@ class Chip8(object):
     def __inst0x7XNN(self):
         '''0x7XNN: Adds NN to VX.'''
         self.__V[int(self.__opCode[1], 16)] += int(self.__opCode[2:4], 16)
-        self.__V[int(self.__opCode[1], 16)] &= 255 # Take the lowest 8 bits
+        self.__V[int(self.__opCode[1], 16)] &= 255  # Take the lowest 8 bits
         self.__pc += 2
 
     def __inst0x8XY0(self):
@@ -261,7 +262,7 @@ class Chip8(object):
             self.__V[int(self.__opCode[2], 16)]
         if self.__V[int(self.__opCode[1], 16)] > 255:
             self.__V[15] = 1
-            self.__V[int(self.__opCode[1], 16)] &= 255 # Take the lowest 8 bits
+            self.__V[int(self.__opCode[1], 16)] &= 255  # Take lowest 8 bits
         else:
             self.__V[15] = 0
         self.__pc += 2
@@ -273,7 +274,7 @@ class Chip8(object):
            self.__V[int(self.__opCode[2], 16)]:
             self.__V[0xF] = 1
         else:
-            self.__V[0xF] = 0 # there is a borrow
+            self.__V[0xF] = 0  # There is a borrow
         self.__V[int(self.__opCode[1], 16)] -= \
             self.__V[int(self.__opCode[2], 16)]
         self.__pc += 2
@@ -353,7 +354,7 @@ class Chip8(object):
         y = self.__V[int(self.__opCode[2], 16)]
         length = int(self.__opCode[3], 16)
         self.__V[15] = 0
-        data = [] # Hold data to be written to screen
+        data = []  # Hold data to be written to screen
         # Adjust data
         for i in range(length):
             data.append(bin(int(self.__ram[self.__I + i], 16)))

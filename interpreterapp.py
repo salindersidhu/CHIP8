@@ -7,6 +7,7 @@ from settings import Settings
 from gridframe import GridFrame
 from guiwindow import GUIWindow
 
+
 class InterpreterApp(QtGui.QApplication):
     ''''''
 
@@ -159,7 +160,7 @@ class InterpreterApp(QtGui.QApplication):
         message = 'The application has crashed!\n\nPlease refer to ' + \
             self.__debugLog + ' for more information!'
         QtGui.QMessageBox.critical(self.__window, 'Error', message,
-                                   buttons = QtGui.QMessageBox.Ok)        
+                                   buttons=QtGui.QMessageBox.Ok)
         debugFile = open(self.__debugLog, 'w')
         debugFile.write(exceptionMessage)
 
@@ -181,9 +182,9 @@ class InterpreterApp(QtGui.QApplication):
         ''''''
         # Pause interpreter while dialog is shown
         self.__pauseEmulator()
-        color = QtGui.QColorDialog.getColor(QtGui.QColor(defColour[0], 
-                                                         defColour[1], 
-                                                         defColour[2]), 
+        color = QtGui.QColorDialog.getColor(QtGui.QColor(defColour[0],
+                                                         defColour[1],
+                                                         defColour[2]),
                                             self.__window)
         # Resume interpreter when dialog is closed
         self.__pauseEmulator(False)
@@ -205,7 +206,7 @@ class InterpreterApp(QtGui.QApplication):
         if self.__isRunning:
             # Pause interpreter while dialog is shown
             self.__pauseEmulator()
-            filename = QtGui.QFileDialog.getSaveFileName(self.__window, 
+            filename = QtGui.QFileDialog.getSaveFileName(self.__window,
                                                          'Save State', '',
                                                          'State Data (*.dat)')
             # Resume interpreter when dialog is closed
@@ -215,9 +216,9 @@ class InterpreterApp(QtGui.QApplication):
                 pickle.dump(self.__chip8.getState(), open(filename, 'wb'))
         else:
             # Display error message
-            QtGui.QMessageBox.critical(self.__window, 'Error', 'Could not ' + \
+            QtGui.QMessageBox.critical(self.__window, 'Error', 'Could not ' +
                                        'save state. Please load a ROM first.',
-                                       buttons = QtGui.QMessageBox.Ok)
+                                       buttons=QtGui.QMessageBox.Ok)
 
     def __eventLoadState(self):
         ''''''
@@ -278,10 +279,10 @@ class InterpreterApp(QtGui.QApplication):
             'Developed by Salinder Sidhu'
         # Render the message box
         QtGui.QMessageBox.information(self.__window, 'About', message,
-                                      buttons = QtGui.QMessageBox.Ok)
+                                      buttons=QtGui.QMessageBox.Ok)
         # Resume interpreter when dialog is closed
         self.__pauseEmulator(False)
- 
+
     def __eventLoadROM(self):
         ''''''
         # Pause interpreter while dialog is shown
@@ -291,7 +292,7 @@ class InterpreterApp(QtGui.QApplication):
                                                      'CHIP8 ROM (*.c8)')
         # Resume interpreter when dialog is closed
         self.__pauseEmulator(False)
-        # Load the CHIP-8 ROM if the filename exists        
+        # Load the CHIP-8 ROM if the filename exists
         if filename:
             self.__chip8.loadROM(filename)
             self.__window.setStatusBar(self.__runStatus)

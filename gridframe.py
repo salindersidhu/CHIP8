@@ -1,5 +1,6 @@
 from PyQt4 import QtGui, QtCore
 
+
 class GridFrame(QtGui.QFrame):
     ''''''
 
@@ -25,7 +26,7 @@ class GridFrame(QtGui.QFrame):
 
     def clearPixels(self):
         ''''''
-        self.__grid = [[0 for _ in range(self.__gHeight)] \
+        self.__grid = [[0 for _ in range(self.__gHeight)]
                        for _ in range(self.__gWidth)]
         self.update()
 

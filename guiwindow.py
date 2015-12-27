@@ -1,5 +1,6 @@
 from PyQt4 import QtGui
 
+
 class GUIWindow(QtGui.QMainWindow):
     ''''''
 
@@ -7,15 +8,15 @@ class GUIWindow(QtGui.QMainWindow):
         ''''''
         super(GUIWindow, self).__init__()
         # Exceptions
-        self.__menuExistsException = Exception('The specified menu already' + \
+        self.__menuExistsException = Exception('The specified menu already' +
                                                ' exists!')
-        self.__menuNotFoundException = Exception('The specified menu was ' + \
+        self.__menuNotFoundException = Exception('The specified menu was ' +
                                                  'not found!')
         # GUIWindow variables
-        self.__menubar = self.menuBar()     # Define a Menu Bar
-        self.__menuDict = {}                # Define a map of Menus
-        self.__statusLabel = QtGui.QLabel() # Define a new status label
-        self.__keyInputDict = {}            # Define a map of key events
+        self.__menubar = self.menuBar()         # Define a Menu Bar
+        self.__menuDict = {}                    # Define a map of Menus
+        self.__statusLabel = QtGui.QLabel()     # Define a new status label
+        self.__keyInputDict = {}                # Define a map of key events
         # Configure the window's properties
         self.setGeometry(0, 0, winWidth, winHeight)
         self.setFixedSize(winWidth, winHeight)
@@ -61,7 +62,7 @@ class GUIWindow(QtGui.QMainWindow):
             raise self.__menuExistsException
         else:
             self.__menuDict[menuTitle] = \
-            self.__menubar.addMenu('&' + menuTitle);
+                self.__menubar.addMenu('&' + menuTitle)
 
     def addMenuItem(self, menuTitle, menuItem, evtFunction=None):
         ''''''

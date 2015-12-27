@@ -1,13 +1,14 @@
 import configparser
 
+
 class Settings:
     ''''''
 
     def __init__(self, filename):
         ''''''
         # Exceptions
-        self.__settingException = Exception('Cannot find specified setting' + \
-                                            ' data!')     
+        self.__settingException = Exception('Cannot find specified setting' +
+                                            ' data!')
         # Settings variables
         self.__filename = filename
         self.__config = configparser.ConfigParser()

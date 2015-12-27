@@ -2,10 +2,14 @@ from PyQt4 import QtGui
 
 
 class GUIWindow(QtGui.QMainWindow):
-    ''''''
+    '''GUIWindow the extends the QtGui.QMainWindow class. It creates a basic
+    window that contains a MenuBar and a StatusBar, both of which are
+    modifiable. The window includes advanced functionality such as appearing in
+    the center of the screen binding of key press and release events.'''
 
     def __init__(self, winTitle, winWidth, winHeight, winIcon):
-        ''''''
+        '''Create a new GUIWindow with a specific window title, width, height
+        and window icon.'''
         super(GUIWindow, self).__init__()
         # Exceptions
         self.__menuExistsException = Exception('The specified menu already' +
@@ -29,34 +33,37 @@ class GUIWindow(QtGui.QMainWindow):
         # Configure the remaining GUI elements for the window
 
     def keyPressEvent(self, event):
-        ''''''
+        '''Handle and process all key press events.'''
         eventKey = event.key()
         if eventKey in self.__keyInputDict:
             self.__keyInputDict[eventKey][0]()
 
     def keyReleaseEvent(self, event):
-        ''''''
+        '''Handle and process all key release events.'''
         eventKey = event.key()
         if eventKey in self.__keyInputDict:
             self.__keyInputDict[eventKey][1]()
 
     def __centerOnScreen(self):
-        ''''''
+        '''Move the position of the window so that it is positioned perfectly
+        in the center of the screen.'''
         res = QtGui.QDesktopWidget().screenGeometry()
         move_width = (res.width() / 2) - (self.frameSize().width() / 2)
         move_height = (res.height() / 2) - (self.frameSize().height() / 2)
         self.move(move_width, move_height)
 
     def updateKeyBindings(self, keyBindings):
-        ''''''
+        '''Change the current value of the keys and their events for keypress
+        and keyrelease to the ones specified by keyBindings.'''
         self.__keyInputDict = keyBindings.copy()
 
     def setStatusBar(self, statusText):
-        ''''''
+        '''Change the current value of the StatusBar's text.'''
         self.__statusLabel.setText(statusText)
 
     def addMenu(self, menuTitle):
-        ''''''
+        '''Add a new menu with a title specified by menuTitle to the window's
+        MenuBar.'''
         # Check if menuTitle does not exist (prevent duplicates)
         if menuTitle in self.__menuDict:
             raise self.__menuExistsException
@@ -65,7 +72,9 @@ class GUIWindow(QtGui.QMainWindow):
                 self.__menubar.addMenu('&' + menuTitle)
 
     def addMenuItem(self, menuTitle, menuItem, evtFunction=None):
-        ''''''
+        '''Add a new menu item to an existing menu with a title specified by
+        menuTitle. Connect an event function to the menu item if the specified
+        value is not None.'''
         # Check if menuTitle exists
         if menuTitle in self.__menuDict:
             # Create the menu item
@@ -78,7 +87,8 @@ class GUIWindow(QtGui.QMainWindow):
             raise self.__menuNotFoundExceptionException
 
     def addMenuSeperator(self, menuTitle):
-        ''''''
+        '''Add a seperator item to an existing menu with a title specified by
+        menuTitle.'''
         # Check if menuTitle exists
         if menuTitle in self.__menuDict:
             self.__menuDict[menuTitle].addSeparator()

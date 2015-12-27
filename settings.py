@@ -5,6 +5,9 @@ class Settings:
 
     def __init__(self, filename):
         ''''''
+        # Exceptions
+        self.__settingException = Exception('Cannot find specified setting' + \
+                                            ' data!')     
         # Settings variables
         self.__filename = filename
         self.__config = configparser.ConfigParser()
@@ -26,17 +29,15 @@ class Settings:
         try:
             return self.__config[category][key]
         except KeyError:
-            Exception('Cannot find setting data for category: ' + category + \
-                      'and setting key: ' + key + '!')
+            raise self.__settingException
 
     def editSetting(self, category, key, value):
         ''''''
         try:
-            self.__config[category][key] = str(value) # Convert value to str
+            self.__config[category][key] = str(value)
             self.__saveAllSettings()
         except KeyError:
-            Exception('Cannot find setting data for category: ' + category + \
-                      'and setting key: ' + key + '!')
+            raise self.__settingException
 
     def __saveAllSettings(self):
         ''''''

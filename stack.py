@@ -3,7 +3,10 @@ class Stack(object):
 
     def __init__(self):
         '''Create a new Stack data type.'''
-        self.clear()
+        # Exceptions
+        self.__emptyStackException = Exception('Cannot pop from empty stack!')
+        # Create an empty list to store stack content
+        self.__stk_pointer = []
 
     def clear(self):
         '''Clear the stack.'''
@@ -15,4 +18,7 @@ class Stack(object):
 
     def pop(self):
         '''Pop the top item off the stack.'''
-        return self.__stk_pointer.pop()
+        try:
+            return self.__stk_pointer.pop()
+        except IndexError:
+            raise self.__emptyStackException

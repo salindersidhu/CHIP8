@@ -6,6 +6,11 @@ class GUIWindow(QtGui.QMainWindow):
     def __init__(self, winTitle, winWidth, winHeight, winIcon):
         ''''''
         super(GUIWindow, self).__init__()
+        # Exceptions
+        self.__menuExistsException = Exception('The specified menu already' + \
+                                               ' exists!')
+        self.__menuNotFoundException = Exception('The specified menu was ' + \
+                                                 'not found!')
         # GUIWindow variables
         self.__menubar = self.menuBar()     # Define a Menu Bar
         self.__menuDict = {}                # Define a map of Menus
@@ -53,7 +58,7 @@ class GUIWindow(QtGui.QMainWindow):
         ''''''
         # Check if menuTitle does not exist (prevent duplicates)
         if menuTitle in self.__menuDict:
-            raise Exception('Menu ' + menuTitle + ' was already created!')
+            raise self.__menuExistsException
         else:
             self.__menuDict[menuTitle] = \
             self.__menubar.addMenu('&' + menuTitle);
@@ -69,7 +74,7 @@ class GUIWindow(QtGui.QMainWindow):
             # Add the menu items to the menu item dictionary
             self.__menuDict[menuTitle].addAction(menuItem)
         else:
-            raise Exception('Menu ' + menuTitle + ' was not found!')
+            raise self.__menuNotFoundExceptionException
 
     def addMenuSeperator(self, menuTitle):
         ''''''
@@ -77,4 +82,4 @@ class GUIWindow(QtGui.QMainWindow):
         if menuTitle in self.__menuDict:
             self.__menuDict[menuTitle].addSeparator()
         else:
-            raise Exception('Menu ' + menuTitle + ' was not found!')
+            raise self.__menuNotFoundExceptionException

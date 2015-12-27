@@ -1,5 +1,6 @@
 import sys
 import pickle
+import traceback
 from PyQt4 import QtGui, QtCore
 from chip8 import Chip8
 from settings import Settings
@@ -17,6 +18,7 @@ class InterpreterApp(QtGui.QApplication):
         self.__defaultStatus = 'Please load a ROM file...'
         self.__pausedStatus = 'PAUSED'
         self.__runStatus = 'Running...'
+        self.__debugLog = 'debugLog.txt'
         self.__isPaused = False
         self.__isRunning = False
         self.__chip8 = Chip8()
@@ -94,7 +96,7 @@ class InterpreterApp(QtGui.QApplication):
                                   self.__eventLoadState)
         # Setup Settings menu items
         self.__window.addMenuItem('Settings', 'Pixel Colour',
-                                  self.__eventChangePxColour)        
+                                  self.__eventChangePxColour)
         self.__window.addMenuItem('Settings', 'Background Colour',
                                   self.__eventChangeBgColour)
         # Setup Help menu items
@@ -103,61 +105,75 @@ class InterpreterApp(QtGui.QApplication):
     def __setupKeyBindings(self):
         ''''''
         self.__keyBindings[QtCore.Qt.Key_1] = [
-            lambda: self.__chip8.set_key_state(1, 1),
-            lambda: self.__chip8.set_key_state(1, 0)]
+            lambda: self.__chip8.setKeyState(1, 1),
+            lambda: self.__chip8.setKeyState(1, 0)]
         self.__keyBindings[QtCore.Qt.Key_2] = [
-            lambda: self.__chip8.set_key_state(2, 1),
-            lambda: self.__chip8.set_key_state(2, 0)]
+            lambda: self.__chip8.setKeyState(2, 1),
+            lambda: self.__chip8.setKeyState(2, 0)]
         self.__keyBindings[QtCore.Qt.Key_3] = [
-            lambda: self.__chip8.set_key_state(3, 1),
-            lambda: self.__chip8.set_key_state(3, 0)]
+            lambda: self.__chip8.setKeyState(3, 1),
+            lambda: self.__chip8.setKeyState(3, 0)]
         self.__keyBindings[QtCore.Qt.Key_4] = [
-            lambda: self.__chip8.set_key_state(12, 1),
-            lambda: self.__chip8.set_key_state(12, 0)]
+            lambda: self.__chip8.setKeyState(12, 1),
+            lambda: self.__chip8.setKeyState(12, 0)]
         self.__keyBindings[QtCore.Qt.Key_Q] = [
-            lambda: self.__chip8.set_key_state(4, 1),
-            lambda: self.__chip8.set_key_state(4, 0)]
+            lambda: self.__chip8.setKeyState(4, 1),
+            lambda: self.__chip8.setKeyState(4, 0)]
         self.__keyBindings[QtCore.Qt.Key_W] = [
-            lambda: self.__chip8.set_key_state(5, 1),
-            lambda: self.__chip8.set_key_state(5, 0)]
+            lambda: self.__chip8.setKeyState(5, 1),
+            lambda: self.__chip8.setKeyState(5, 0)]
         self.__keyBindings[QtCore.Qt.Key_E] = [
-            lambda: self.__chip8.set_key_state(6, 1),
-            lambda: self.__chip8.set_key_state(6, 0)]
+            lambda: self.__chip8.setKeyState(6, 1),
+            lambda: self.__chip8.setKeyState(6, 0)]
         self.__keyBindings[QtCore.Qt.Key_R] = [
-            lambda: self.__chip8.set_key_state(13, 1),
-            lambda: self.__chip8.set_key_state(13, 0)]
+            lambda: self.__chip8.setKeyState(13, 1),
+            lambda: self.__chip8.setKeyState(13, 0)]
         self.__keyBindings[QtCore.Qt.Key_A] = [
-            lambda: self.__chip8.set_key_state(7, 1),
-            lambda: self.__chip8.set_key_state(7, 0)]
+            lambda: self.__chip8.setKeyState(7, 1),
+            lambda: self.__chip8.setKeyState(7, 0)]
         self.__keyBindings[QtCore.Qt.Key_S] = [
-            lambda: self.__chip8.set_key_state(8, 1),
-            lambda: self.__chip8.set_key_state(8, 0)]
+            lambda: self.__chip8.setKeyState(8, 1),
+            lambda: self.__chip8.setKeyState(8, 0)]
         self.__keyBindings[QtCore.Qt.Key_D] = [
-            lambda: self.__chip8.set_key_state(9, 1),
-            lambda: self.__chip8.set_key_state(9, 0)]
+            lambda: self.__chip8.setKeyState(9, 1),
+            lambda: self.__chip8.setKeyState(9, 0)]
         self.__keyBindings[QtCore.Qt.Key_F] = [
-            lambda: self.__chip8.set_key_state(14, 1),
-            lambda: self.__chip8.set_key_state(14, 0)]
+            lambda: self.__chip8.setKeyState(14, 1),
+            lambda: self.__chip8.setKeyState(14, 0)]
         self.__keyBindings[QtCore.Qt.Key_Z] = [
-            lambda: self.__chip8.set_key_state(10, 1),
-            lambda: self.__chip8.set_key_state(10, 0)]
+            lambda: self.__chip8.setKeyState(10, 1),
+            lambda: self.__chip8.setKeyState(10, 0)]
         self.__keyBindings[QtCore.Qt.Key_X] = [
-            lambda: self.__chip8.set_key_state(0, 1),
-            lambda: self.__chip8.set_key_state(0, 0)]
+            lambda: self.__chip8.setKeyState(0, 1),
+            lambda: self.__chip8.setKeyState(0, 0)]
         self.__keyBindings[QtCore.Qt.Key_C] = [
-            lambda: self.__chip8.set_key_state(11, 1),
-            lambda: self.__chip8.set_key_state(11, 0)]
+            lambda: self.__chip8.setKeyState(11, 1),
+            lambda: self.__chip8.setKeyState(11, 0)]
         self.__keyBindings[QtCore.Qt.Key_V] = [
-            lambda: self.__chip8.set_key_state(15, 1),
-            lambda: self.__chip8.set_key_state(15, 0)]
+            lambda: self.__chip8.setKeyState(15, 1),
+            lambda: self.__chip8.setKeyState(15, 0)]
         self.__window.updateKeyBindings(self.__keyBindings)
+
+    def __logExceptionToFile(self, exceptionMessage):
+        ''''''
+        message = 'The application has crashed!\n\nPlease refer to ' + \
+            self.__debugLog + ' for more information!'
+        QtGui.QMessageBox.critical(self.__window, 'Error', message,
+                                   buttons = QtGui.QMessageBox.Ok)        
+        debugFile = open(self.__debugLog, 'w')
+        debugFile.write(exceptionMessage)
 
     def __emulate(self):
         ''''''
         try:
             if self.__isRunning and not self.__isPaused:
-                self.__chip8.emulate_cycle()
-                self.__gridFrame.updatePixels(self.__chip8.get_GFX())
+                self.__chip8.emulateCycle()
+                self.__gridFrame.updatePixels(self.__chip8.getGFX())
+        except:
+            # Exception was caught, log it and terminate application
+            self.__isRunning = False
+            self.__logExceptionToFile(traceback.format_exc())
+            self.__window.close()
         finally:
             QtCore.QTimer.singleShot(1 / self.__FPS, self.__emulate)
 
@@ -177,7 +193,7 @@ class InterpreterApp(QtGui.QApplication):
         ''''''
         if self.__isRunning:
             self.__isPaused = action
-            # Set the status bar text depending on the state of the interpreter
+            # Set the status text (paused or running)
             if self.__isPaused:
                 self.__window.setStatusBar(self.__pausedStatus)
             else:
@@ -196,7 +212,7 @@ class InterpreterApp(QtGui.QApplication):
             self.__pauseEmulator(False)
             # Save the state of the CHIP-8 CPU to a file
             if filename:
-                pickle.dump(self.__chip8.get_state(), open(filename, 'wb'))
+                pickle.dump(self.__chip8.getState(), open(filename, 'wb'))
         else:
             # Display error message
             QtGui.QMessageBox.critical(self.__window, 'Error', 'Could not ' + \
@@ -214,7 +230,7 @@ class InterpreterApp(QtGui.QApplication):
         self.__pauseEmulator(False)
         # Load the state of the CHIP-8 CPU from a file
         if filename:
-            self.__chip8.set_state(pickle.load(open(filename, 'rb')))
+            self.__chip8.setState(pickle.load(open(filename, 'rb')))
             self.__window.setStatusBar(self.__runStatus)
             self.__isRunning = True
 
@@ -258,13 +274,11 @@ class InterpreterApp(QtGui.QApplication):
         ''''''
         # Pause interpreter while dialog is shown
         self.__pauseEmulator()
-        msgBoxTitle = 'About'
-        msgBoxText = 'Python CHIP-8 CPU Interpreter\nPython 3 and PyQt 4' + \
-            '\n\nCopyright (C) 2015 Salinder Sidhu'
+        message = 'Python CHIP-8 CPU Interpreter\nPython 3 and PyQt 4\n\n' + \
+            'Developed by Salinder Sidhu'
         # Render the message box
-        dialog = QtGui.QMessageBox.information(self.__window, msgBoxTitle,
-                                               msgBoxText,
-                                               buttons = QtGui.QMessageBox.Ok)
+        QtGui.QMessageBox.information(self.__window, 'About', message,
+                                      buttons = QtGui.QMessageBox.Ok)
         # Resume interpreter when dialog is closed
         self.__pauseEmulator(False)
  
@@ -279,7 +293,7 @@ class InterpreterApp(QtGui.QApplication):
         self.__pauseEmulator(False)
         # Load the CHIP-8 ROM if the filename exists        
         if filename:
-            self.__chip8.load_rom(filename)
+            self.__chip8.loadROM(filename)
             self.__window.setStatusBar(self.__runStatus)
             self.__isRunning = True
 

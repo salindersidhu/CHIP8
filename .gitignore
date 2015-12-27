@@ -3,3 +3,5 @@
 __pycache__
 # Settings file
 settings.ini
+# Debug files
+debugLog.txt

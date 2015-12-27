@@ -180,6 +180,7 @@ class InterpreterApp(QtGui.QApplication):
         try:
             if self.__isRunning and not self.__isPaused:
                 self.__chip8.emulateCycle()
+                self.__handleSound(self.__chip8.getSoundTimer())
                 self.__gridFrame.updatePixels(self.__chip8.getGFX())
         except:
             # Exception was caught, log it and terminate application
@@ -188,6 +189,11 @@ class InterpreterApp(QtGui.QApplication):
             self.__window.close()
         finally:
             QtCore.QTimer.singleShot(1 / self.__FPS, self.__emulate)
+
+    def __handleSound(self, soundTimer):
+        '''Play a beep sound if the value of the soundTimer is non-zero.'''
+        if soundTimer:
+            QtGui.QSound.play('Resources/beep.wav')
 
     def __selectColour(self, defColour):
         '''Open a colour selection dialog and return a new QColor if a new

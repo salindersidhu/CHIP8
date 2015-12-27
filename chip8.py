@@ -101,6 +101,10 @@ class Chip8(object):
         if self.__key:
             self.__key[key] = state
 
+    def getSoundTimer(self):
+        '''Return the value of the sound timer.'''
+        return self.__timers[1]
+
     def getGFX(self):
         '''Return the graphics buffer.'''
         # Check if the graphics buffer has been initialized

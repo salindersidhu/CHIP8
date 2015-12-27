@@ -5,10 +5,20 @@ Description:
 A Python based GUI implementation of the CHIP-8 system. A project I developed with the intention of gaining knowledge about emulators and cross platform GUI libraries.
 For more specific information about the CHIP-8 system, please refer to the following WIKI article on [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8).
 
+<p align="center">
+	<img src="http://i1379.photobucket.com/albums/ah129/SalinderSid/s1_zps6p4fo1gh.png" alt="Loaded ROM and Option menu."/>
+	<img src="http://i1379.photobucket.com/albums/ah129/SalinderSid/s3_zpsaoyyf98b.png" alt="Loaded ROM running."/>
+</p>
+<p align="center">
+	<img src="http://i1379.photobucket.com/albums/ah129/SalinderSid/s2_zpsq4tteay3.png" alt="Change pixel colour selection dialog."/>
+	<img src="http://i1379.photobucket.com/albums/ah129/SalinderSid/s4_zpsthjnlyv3.png" alt="About dialog."/>
+</p>
+
 Supports:
 -------------
 - Microsoft Windows 7, 8, 8.1, 10
-- Linux Based Distributions
+- Linux based distributions
+- MAC OS X
 
 ROMs:
 -------------
@@ -67,7 +77,7 @@ The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interprete
 		<td><b>1</b></td>
 		<td><b>2</b></td>
 		<td><b>3</b></td>
-		<td><b>C</b></td>
+		<td><b>4</b></td>
 	</tr>
 	<tr>
 		<td><b>Q</b></td>
@@ -88,6 +98,10 @@ The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interprete
 		<td><b>V</b></td>
 	</tr>
 </table>
+
+Troubleshooting:
+-------------
+This application is cross platform compatible with most PC operating systems (`Windows`, `Linux` and `MAC`). If the application crashes, a log is generated in the application's directory. This log contains error and exception details on why the application crashed.
 
 License:
 -------------

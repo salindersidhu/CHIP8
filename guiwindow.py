@@ -1,5 +1,4 @@
 from PyQt4 import QtGui
-from guicanvas import GUICanvas
 
 class GUIWindow(QtGui.QMainWindow):
     ''''''
@@ -7,10 +6,9 @@ class GUIWindow(QtGui.QMainWindow):
     def __init__(self, winTitle, winWidth, winHeight, winIcon):
         ''''''
         super(GUIWindow, self).__init__()
-        # Window GUI variables
+        # GUIWindow variables
         self.__menubar = self.menuBar()     # Define a Menu Bar
         self.__menuDict = {}                # Define a map of Menus
-        self.__canvas = GUICanvas(self)     # Define a drawing canvas
         self.__statusLabel = QtGui.QLabel() # Define a new status label
         self.__keyInputDict = {}            # Define a map of key events
         # Configure the window's properties
@@ -20,22 +18,9 @@ class GUIWindow(QtGui.QMainWindow):
         self.setWindowIcon(QtGui.QIcon(winIcon))
         # Bind the QLabel to the Status Bar
         self.statusBar().addWidget(self.__statusLabel, 1)
-        # Bind the GUI drawing canvas to the GUI window
-        self.setCentralWidget(self.__canvas)
         # Set the window to appear in the center of the screen
-        self.centerOnScreen()
+        self.__centerOnScreen()
         # Configure the remaining GUI elements for the window
-
-    def centerOnScreen(self):
-        ''''''
-        res = QtGui.QDesktopWidget().screenGeometry()
-        move_width = (res.width() / 2) - (self.frameSize().width() / 2)
-        move_height = (res.height() / 2) - (self.frameSize().height() / 2)
-        self.move(move_width, move_height)
-
-    def updateKeyBindings(self, keyBindings):
-        ''''''
-        self.__keyInputDict = keyBindings.copy()
 
     def keyPressEvent(self, event):
         ''''''
@@ -49,14 +34,20 @@ class GUIWindow(QtGui.QMainWindow):
         if eventKey in self.__keyInputDict:
             self.__keyInputDict[eventKey][1]()
 
+    def __centerOnScreen(self):
+        ''''''
+        res = QtGui.QDesktopWidget().screenGeometry()
+        move_width = (res.width() / 2) - (self.frameSize().width() / 2)
+        move_height = (res.height() / 2) - (self.frameSize().height() / 2)
+        self.move(move_width, move_height)
+
+    def updateKeyBindings(self, keyBindings):
+        ''''''
+        self.__keyInputDict = keyBindings.copy()
+
     def setStatusBar(self, statusText):
         ''''''
         self.__statusLabel.setText(statusText)
-
-    def done(self):
-        ''''''
-        # Render the window
-        self.show()
 
     def addMenu(self, menuTitle):
         ''''''
@@ -79,42 +70,6 @@ class GUIWindow(QtGui.QMainWindow):
             self.__menuDict[menuTitle].addAction(menuItem)
         else:
             raise Exception('Menu ' + menuTitle + ' was not found!')
-
-    def defaultEvent(self):
-        ''''''
-        msgBoxTitle = 'Error'
-        msgBoxText = 'The specific action is not implemented!'
-        # Render the error message box
-        QtGui.QMessageBox.critical(self, msgBoxTitle, msgBoxText,
-                                   buttons = QtGui.QMessageBox.Ok)
-
-    def setupDrawingGrid(self, canvasWidth, canvasHeight, pxSize):
-        ''''''
-        self.__canvas.setGrid(canvasWidth, canvasHeight, pxSize)
-
-    def clearDrawingGrid(self):
-        ''''''
-        self.__canvas.clearGrid()
-
-    def updateDrawingGrid(self, grid):
-        ''''''
-        self.__canvas.updateGrid(grid)
-
-    def setDrawingGridBgColour(self, bgColour):
-        ''''''
-        self.__canvas.updateBgColour(bgColour)
-
-    def setDrawingGridPxColour(self, pxColour):
-        ''''''
-        self.__canvas.updatePxColour(pxColour)
-
-    def getDrawingGridBgColour(self):
-        ''''''
-        return self.__canvas.getBgColour()
-
-    def getDrawingGridPxColour(self):
-        ''''''
-        return self.__canvas.getPxColour()
 
     def addMenuSeperator(self, menuTitle):
         ''''''

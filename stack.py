@@ -3,16 +3,16 @@ class Stack(object):
 
     def __init__(self):
         '''Create a new Stack data type.'''
-        self.stk_pointer = []
+        self.clear()
 
     def clear(self):
         '''Clear the stack.'''
-        self.stk_pointer = []
+        self.__stk_pointer = []
 
     def push(self, item):
         '''Push item to the top of the stack.'''
-        self.stk_pointer.append(item)
+        self.__stk_pointer.append(item)
 
     def pop(self):
         '''Pop the top item off the stack.'''
-        return self.stk_pointer.pop()
+        return self.__stk_pointer.pop()

@@ -2,292 +2,288 @@ import sys
 import pickle
 from PyQt4 import QtGui, QtCore
 from chip8 import Chip8
-from guiwindow import GUIWindow
 from settings import Settings
+from gridframe import GridFrame
+from guiwindow import GUIWindow
 
-class InterpreterApp:
+class InterpreterApp(QtGui.QApplication):
     ''''''
 
-    def __init__(self):
+    def __init__(self, args):
         ''''''
+        super(InterpreterApp, self).__init__(args)
         # Application variables
-        self.isPaused = False
-        self.isRunning = False
-        self.chip8 = Chip8()
-        self.FPS = 60
-        self.timer = QtCore.QBasicTimer()
-        self.keyBindings = {}
-        self.settings = Settings('settings.ini')
-        # GUI Window variables
-        self.winTitle = 'Python CHIP-8 Interpreter'
-        self.winWidth = 640
-        self.winHeight = 360
-        self.canvasPxWidth = 64
-        self.canvasPxHeight = 32
-        self.canvasPxSize = 10
-        self.winIcon = 'Resources/icon.png'
-        self.defaultStatusText = 'Please load a ROM file...'
-        self.pausedStatusText = 'PAUSED'
-        self.runningStatusText = 'Running...'
-        # Configure the application
-        self.app = QtGui.QApplication(sys.argv)
-        # Configure the GUI window
-        self.window = GUIWindow(self.winTitle, self.winWidth, self.winHeight,
-                                self.winIcon)
-        self.loadSettings()
-        self.setupMenu()
-        self.setupMenuItems()
-        self.setupKeyBindings()
-        self.window.setStatusBar(self.defaultStatusText)
-        self.window.setupDrawingGrid(self.canvasPxWidth, self.canvasPxHeight,
-                                     self.canvasPxSize)
-        # Finish GUI window setup
-        self.window.done()
-        # Start the CHIP-8 timed emulation
-        self.emulate()
+        self.__FPS = 60
+        self.__defaultStatus = 'Please load a ROM file...'
+        self.__pausedStatus = 'PAUSED'
+        self.__runStatus = 'Running...'
+        self.__isPaused = False
+        self.__isRunning = False
+        self.__chip8 = Chip8()
+        self.__keyBindings = {}
+        self.__timer = QtCore.QBasicTimer()
+        # Configure Settings
+        self.__settings = Settings('settings.ini')
+        # Configure the GUIWindow
+        self.__window = GUIWindow('Python CHIP-8 Interpreter', 640, 360,
+                                  'Resources/icon.png')
+        # Configure the GridFrame
+        self.__gridFrame = GridFrame(self.__window, 64, 32, 10, (0, 0, 0),
+                                     (255, 255, 255))
+        self.__window.setCentralWidget(self.__gridFrame)
+        # Setup remaining GUI elements
+        self.__loadSettings()
+        self.__setupMenu()
+        self.__setupMenuItems()
+        self.__setupKeyBindings()
+        self.__window.setStatusBar(self.__defaultStatus)
+        self.__window.show()
+        # Start the CHIP-8 emulation
+        self.__emulate()
 
-    def loadSettings(self):
+    def __loadSettings(self):
         ''''''
         # Save default settings to file if they no settings data exists
-        if self.settings.isEmpty():
+        if self.__settings.isEmpty():
             defaults = {}
             # Get the default value for the pixel colour
-            defaultPxColours = self.window.getDrawingGridPxColour()
-            defaults['pxcolr'] = defaultPxColours[0]
-            defaults['pxcolg'] = defaultPxColours[1]
-            defaults['pxcolb'] = defaultPxColours[2]
+            pixelColour = self.__gridFrame.getPixelColour()
+            defaults['pxcolr'] = pixelColour[0]
+            defaults['pxcolg'] = pixelColour[1]
+            defaults['pxcolb'] = pixelColour[2]
             # Get the  default value for the background color
-            defaultBgColours = self.window.getDrawingGridBgColour()
-            defaults['bgcolr'] = defaultBgColours[0]
-            defaults['bgcolg'] = defaultBgColours[1]
-            defaults['bgcolb'] = defaultBgColours[2]
+            backgroundColour = self.__gridFrame.getBackgroundColour()
+            defaults['bgcolr'] = backgroundColour[0]
+            defaults['bgcolg'] = backgroundColour[1]
+            defaults['bgcolb'] = backgroundColour[2]
             # Add and save default settings
-            self.settings.addNewSetting('DEFAULT', defaults)
+            self.__settings.addNewSetting('DEFAULT', defaults)
         else:
             # Load settings for pixel colour
-            pxRed = int(self.settings.getSetting('DEFAULT', 'pxcolr'))
-            pxGreen = int(self.settings.getSetting('DEFAULT', 'pxcolg'))
-            pxBlue = int(self.settings.getSetting('DEFAULT', 'pxcolb'))
-            self.window.setDrawingGridPxColour((pxRed, pxGreen, pxBlue))
+            pxRed = int(self.__settings.getSetting('DEFAULT', 'pxcolr'))
+            pxGreen = int(self.__settings.getSetting('DEFAULT', 'pxcolg'))
+            pxBlue = int(self.__settings.getSetting('DEFAULT', 'pxcolb'))
+            self.__gridFrame.changePixelColour((pxRed, pxGreen, pxBlue))
             # Load settings for background colour
-            bgRed = int(self.settings.getSetting('DEFAULT', 'bgcolr'))
-            bgGreen = int(self.settings.getSetting('DEFAULT', 'bgcolg'))
-            bgBlue = int(self.settings.getSetting('DEFAULT', 'bgcolb'))
-            self.window.setDrawingGridBgColour((bgRed, bgGreen, bgBlue))
+            bgRed = int(self.__settings.getSetting('DEFAULT', 'bgcolr'))
+            bgGreen = int(self.__settings.getSetting('DEFAULT', 'bgcolg'))
+            bgBlue = int(self.__settings.getSetting('DEFAULT', 'bgcolb'))
+            self.__gridFrame.changeBackgroundColour((bgRed, bgGreen, bgBlue))
 
-    def setupMenu(self):
+    def __setupMenu(self):
         ''''''
-        self.window.addMenu('File')
-        self.window.addMenu('Options')
-        self.window.addMenu('Settings')
-        self.window.addMenu('Help')
+        self.__window.addMenu('File')
+        self.__window.addMenu('Options')
+        self.__window.addMenu('Settings')
+        self.__window.addMenu('Help')
 
-    def setupMenuItems(self):
+    def __setupMenuItems(self):
         ''''''
         # Setup File menu items
-        self.window.addMenuItem('File', 'Load ROM', self.eventLoadROM)
-        self.window.addMenuSeperator('File')
-        self.window.addMenuItem('File', 'Quit', self.window.close)
+        self.__window.addMenuItem('File', 'Load ROM', self.__eventLoadROM)
+        self.__window.addMenuSeperator('File')
+        self.__window.addMenuItem('File', 'Quit', self.__window.close)
         # Setup Option menu items
-        self.window.addMenuItem('Options', 'Reset', self.eventReset)
-        self.window.addMenuItem('Options', 'Pause / Resume',
-                                self.eventPauseResume)
-        self.window.addMenuSeperator('Options')
-        self.window.addMenuItem('Options', 'Save State', self.eventSaveState)
-        self.window.addMenuItem('Options', 'Load State', self.eventLoadState)
+        self.__window.addMenuItem('Options', 'Reset', self.__eventReset)
+        self.__window.addMenuItem('Options', 'Pause / Resume',
+                                  self.__eventPauseResume)
+        self.__window.addMenuSeperator('Options')
+        self.__window.addMenuItem('Options', 'Save State',
+                                  self.__eventSaveState)
+        self.__window.addMenuItem('Options', 'Load State',
+                                  self.__eventLoadState)
         # Setup Settings menu items
-        self.window.addMenuItem('Settings', 'Pixel Colour',
-                                self.eventChangePxColour)        
-        self.window.addMenuItem('Settings', 'Background Colour',
-                                self.eventChangeBgColour)
+        self.__window.addMenuItem('Settings', 'Pixel Colour',
+                                  self.__eventChangePxColour)        
+        self.__window.addMenuItem('Settings', 'Background Colour',
+                                  self.__eventChangeBgColour)
         # Setup Help menu items
-        self.window.addMenuItem('Help', 'About', self.eventAbout)
+        self.__window.addMenuItem('Help', 'About', self.__eventAbout)
 
-    def setupKeyBindings(self):
+    def __setupKeyBindings(self):
         ''''''
-        self.keyBindings[QtCore.Qt.Key_1] = [
-            lambda: self.chip8.set_key_state(1, 1),
-            lambda: self.chip8.set_key_state(1, 0)]
-        self.keyBindings[QtCore.Qt.Key_2] = [
-            lambda: self.chip8.set_key_state(2, 1),
-            lambda: self.chip8.set_key_state(2, 0)]
-        self.keyBindings[QtCore.Qt.Key_3] = [
-            lambda: self.chip8.set_key_state(3, 1),
-            lambda: self.chip8.set_key_state(3, 0)]
-        self.keyBindings[QtCore.Qt.Key_4] = [
-            lambda: self.chip8.set_key_state(12, 1),
-            lambda: self.chip8.set_key_state(12, 0)]
-        self.keyBindings[QtCore.Qt.Key_Q] = [
-            lambda: self.chip8.set_key_state(4, 1),
-            lambda: self.chip8.set_key_state(4, 0)]
-        self.keyBindings[QtCore.Qt.Key_W] = [
-            lambda: self.chip8.set_key_state(5, 1),
-            lambda: self.chip8.set_key_state(5, 0)]
-        self.keyBindings[QtCore.Qt.Key_E] = [
-            lambda: self.chip8.set_key_state(6, 1),
-            lambda: self.chip8.set_key_state(6, 0)]
-        self.keyBindings[QtCore.Qt.Key_R] = [
-            lambda: self.chip8.set_key_state(13, 1),
-            lambda: self.chip8.set_key_state(13, 0)]
-        self.keyBindings[QtCore.Qt.Key_A] = [
-            lambda: self.chip8.set_key_state(7, 1),
-            lambda: self.chip8.set_key_state(7, 0)]
-        self.keyBindings[QtCore.Qt.Key_S] = [
-            lambda: self.chip8.set_key_state(8, 1),
-            lambda: self.chip8.set_key_state(8, 0)]
-        self.keyBindings[QtCore.Qt.Key_D] = [
-            lambda: self.chip8.set_key_state(9, 1),
-            lambda: self.chip8.set_key_state(9, 0)]
-        self.keyBindings[QtCore.Qt.Key_F] = [
-            lambda: self.chip8.set_key_state(14, 1),
-            lambda: self.chip8.set_key_state(14, 0)]
-        self.keyBindings[QtCore.Qt.Key_Z] = [
-            lambda: self.chip8.set_key_state(10, 1),
-            lambda: self.chip8.set_key_state(10, 0)]
-        self.keyBindings[QtCore.Qt.Key_X] = [
-            lambda: self.chip8.set_key_state(0, 1),
-            lambda: self.chip8.set_key_state(0, 0)]
-        self.keyBindings[QtCore.Qt.Key_C] = [
-            lambda: self.chip8.set_key_state(11, 1),
-            lambda: self.chip8.set_key_state(11, 0)]
-        self.keyBindings[QtCore.Qt.Key_V] = [
-            lambda: self.chip8.set_key_state(15, 1),
-            lambda: self.chip8.set_key_state(15, 0)]
-        self.window.updateKeyBindings(self.keyBindings)
+        self.__keyBindings[QtCore.Qt.Key_1] = [
+            lambda: self.__chip8.set_key_state(1, 1),
+            lambda: self.__chip8.set_key_state(1, 0)]
+        self.__keyBindings[QtCore.Qt.Key_2] = [
+            lambda: self.__chip8.set_key_state(2, 1),
+            lambda: self.__chip8.set_key_state(2, 0)]
+        self.__keyBindings[QtCore.Qt.Key_3] = [
+            lambda: self.__chip8.set_key_state(3, 1),
+            lambda: self.__chip8.set_key_state(3, 0)]
+        self.__keyBindings[QtCore.Qt.Key_4] = [
+            lambda: self.__chip8.set_key_state(12, 1),
+            lambda: self.__chip8.set_key_state(12, 0)]
+        self.__keyBindings[QtCore.Qt.Key_Q] = [
+            lambda: self.__chip8.set_key_state(4, 1),
+            lambda: self.__chip8.set_key_state(4, 0)]
+        self.__keyBindings[QtCore.Qt.Key_W] = [
+            lambda: self.__chip8.set_key_state(5, 1),
+            lambda: self.__chip8.set_key_state(5, 0)]
+        self.__keyBindings[QtCore.Qt.Key_E] = [
+            lambda: self.__chip8.set_key_state(6, 1),
+            lambda: self.__chip8.set_key_state(6, 0)]
+        self.__keyBindings[QtCore.Qt.Key_R] = [
+            lambda: self.__chip8.set_key_state(13, 1),
+            lambda: self.__chip8.set_key_state(13, 0)]
+        self.__keyBindings[QtCore.Qt.Key_A] = [
+            lambda: self.__chip8.set_key_state(7, 1),
+            lambda: self.__chip8.set_key_state(7, 0)]
+        self.__keyBindings[QtCore.Qt.Key_S] = [
+            lambda: self.__chip8.set_key_state(8, 1),
+            lambda: self.__chip8.set_key_state(8, 0)]
+        self.__keyBindings[QtCore.Qt.Key_D] = [
+            lambda: self.__chip8.set_key_state(9, 1),
+            lambda: self.__chip8.set_key_state(9, 0)]
+        self.__keyBindings[QtCore.Qt.Key_F] = [
+            lambda: self.__chip8.set_key_state(14, 1),
+            lambda: self.__chip8.set_key_state(14, 0)]
+        self.__keyBindings[QtCore.Qt.Key_Z] = [
+            lambda: self.__chip8.set_key_state(10, 1),
+            lambda: self.__chip8.set_key_state(10, 0)]
+        self.__keyBindings[QtCore.Qt.Key_X] = [
+            lambda: self.__chip8.set_key_state(0, 1),
+            lambda: self.__chip8.set_key_state(0, 0)]
+        self.__keyBindings[QtCore.Qt.Key_C] = [
+            lambda: self.__chip8.set_key_state(11, 1),
+            lambda: self.__chip8.set_key_state(11, 0)]
+        self.__keyBindings[QtCore.Qt.Key_V] = [
+            lambda: self.__chip8.set_key_state(15, 1),
+            lambda: self.__chip8.set_key_state(15, 0)]
+        self.__window.updateKeyBindings(self.__keyBindings)
 
-    def pauseEmulator(self, action=True):
-        ''''''
-        if self.isRunning:
-            self.isPaused = action
-            # Set the status bar text depending on the state of the interpreter
-            if self.isPaused:
-                self.window.setStatusBar(self.pausedStatusText)
-            else:
-                self.window.setStatusBar(self.runningStatusText)
-
-    def emulate(self):
+    def __emulate(self):
         ''''''
         try:
-            if self.isRunning and not self.isPaused:
-                self.chip8.emulate_cycle()
-                self.window.updateDrawingGrid(self.chip8.get_GFX())
+            if self.__isRunning and not self.__isPaused:
+                self.__chip8.emulate_cycle()
+                self.__gridFrame.updatePixels(self.__chip8.get_GFX())
         finally:
-            QtCore.QTimer.singleShot(1 / self.FPS, self.emulate)
+            QtCore.QTimer.singleShot(1 / self.__FPS, self.__emulate)
 
-    def eventSaveState(self):
-        ''''''
-        msgBoxTitle = 'Error'
-        msgBoxText = 'Could not save state. Please load a ROM first.'
-        # Check if ROM is loaded
-        if self.isRunning:
-            # Pause interpreter while dialog is shown
-            self.pauseEmulator()
-            filename = QtGui.QFileDialog.getSaveFileName(self.window, 
-                                                         'Save State',
-                                                         '',
-                                                         'State Data (*.dat)')
-            # Resume interpreter when dialog is closed
-            self.pauseEmulator(False)
-            # Save the state of the CHIP-8 CPU to a file
-            if filename:
-                pickle.dump(self.chip8.get_state(), open(filename, 'wb'))
-        else:
-            # Render the error message box
-            QtGui.QMessageBox.critical(self.window, msgBoxTitle, msgBoxText,
-                                       buttons = QtGui.QMessageBox.Ok)
-
-    def eventLoadState(self):
+    def __selectColour(self, defColour):
         ''''''
         # Pause interpreter while dialog is shown
-        self.pauseEmulator()
-        filename = QtGui.QFileDialog.getOpenFileName(self.window, 'Load State',
-                                                     '',
-                                                     'State Data (*.dat)')
-        # Resume interpreter when dialog is closed
-        self.pauseEmulator(False)
-        # Load the state of the CHIP-8 CPU from a file
-        if filename:
-            self.chip8.set_state(pickle.load(open(filename, 'rb')))
-            self.window.setStatusBar(self.runningStatusText)
-            self.isRunning = True
-
-    def eventChangeBgColour(self):
-        ''''''
-        newCol = self.selectColour(self.window.getDrawingGridBgColour())
-        # Verify that the colour is valid
-        if newCol.isValid():
-            newBgColour = (newCol.red(), newCol.green(), newCol.blue())
-            self.window.setDrawingGridBgColour(newBgColour)
-            # Save the background colour to settings
-            self.settings.editSetting('DEFAULT', 'bgcolr', newCol.red())
-            self.settings.editSetting('DEFAULT', 'bgcolg', newCol.green())
-            self.settings.editSetting('DEFAULT', 'bgcolb', newCol.blue())
-
-    def eventChangePxColour(self):
-        ''''''
-        newCol = self.selectColour(self.window.getDrawingGridPxColour())
-        # Verify that the colour is valid
-        if newCol.isValid():
-            newPxColour = (newCol.red(), newCol.green(), newCol.blue())
-            self.window.setDrawingGridPxColour(newPxColour)
-            # Save the pixel colour to settings
-            self.settings.editSetting('DEFAULT', 'pxcolr', newCol.red())
-            self.settings.editSetting('DEFAULT', 'pxcolg', newCol.green())
-            self.settings.editSetting('DEFAULT', 'pxcolb', newCol.blue())
-
-    def selectColour(self, defColour):
-        ''''''
-        # Pause interpreter while dialog is shown
-        self.pauseEmulator()
+        self.__pauseEmulator()
         color = QtGui.QColorDialog.getColor(QtGui.QColor(defColour[0], 
                                                          defColour[1], 
                                                          defColour[2]), 
-                                            self.window)
+                                            self.__window)
         # Resume interpreter when dialog is closed
-        self.pauseEmulator(False)
+        self.__pauseEmulator(False)
         return color
 
-    def eventPauseResume(self):
+    def __pauseEmulator(self, action=True):
         ''''''
-        self.pauseEmulator(not self.isPaused)
+        if self.__isRunning:
+            self.__isPaused = action
+            # Set the status bar text depending on the state of the interpreter
+            if self.__isPaused:
+                self.__window.setStatusBar(self.__pausedStatus)
+            else:
+                self.__window.setStatusBar(self.__runStatus)
 
-    def eventReset(self):
+    def __eventSaveState(self):
         ''''''
-        if self.isRunning:
-            self.window.clearDrawingGrid()
-            self.chip8.reset()
-            self.window.setStatusBar(self.defaultStatusText)
-            self.isPaused = self.isRunning = False
+        # Check if ROM is loaded
+        if self.__isRunning:
+            # Pause interpreter while dialog is shown
+            self.__pauseEmulator()
+            filename = QtGui.QFileDialog.getSaveFileName(self.__window, 
+                                                         'Save State', '',
+                                                         'State Data (*.dat)')
+            # Resume interpreter when dialog is closed
+            self.__pauseEmulator(False)
+            # Save the state of the CHIP-8 CPU to a file
+            if filename:
+                pickle.dump(self.__chip8.get_state(), open(filename, 'wb'))
+        else:
+            # Display error message
+            QtGui.QMessageBox.critical(self.__window, 'Error', 'Could not ' + \
+                                       'save state. Please load a ROM first.',
+                                       buttons = QtGui.QMessageBox.Ok)
 
-    def eventAbout(self):
+    def __eventLoadState(self):
         ''''''
         # Pause interpreter while dialog is shown
-        self.pauseEmulator()
+        self.__pauseEmulator()
+        filename = QtGui.QFileDialog.getOpenFileName(self.__window,
+                                                     'Load State', '',
+                                                     'State Data (*.dat)')
+        # Resume interpreter when dialog is closed
+        self.__pauseEmulator(False)
+        # Load the state of the CHIP-8 CPU from a file
+        if filename:
+            self.__chip8.set_state(pickle.load(open(filename, 'rb')))
+            self.__window.setStatusBar(self.__runStatus)
+            self.__isRunning = True
+
+    def __eventChangeBgColour(self):
+        ''''''
+        newCol = self.__selectColour(self.__gridFrame.getBackgroundColour())
+        # Verify that the new background colour is valid
+        if newCol.isValid():
+            newBgColour = (newCol.red(), newCol.green(), newCol.blue())
+            self.__gridFrame.changeBackgroundColour(newBgColour)
+            # Save the new background colour to settings
+            self.__settings.editSetting('DEFAULT', 'bgcolr', newCol.red())
+            self.__settings.editSetting('DEFAULT', 'bgcolg', newCol.green())
+            self.__settings.editSetting('DEFAULT', 'bgcolb', newCol.blue())
+
+    def __eventChangePxColour(self):
+        ''''''
+        newCol = self.__selectColour(self.__gridFrame.getPixelColour())
+        # Verify that the new pixel colour is valid
+        if newCol.isValid():
+            newPxColour = (newCol.red(), newCol.green(), newCol.blue())
+            self.__gridFrame.changePixelColour(newPxColour)
+            # Save the new pixel colour to settings
+            self.__settings.editSetting('DEFAULT', 'pxcolr', newCol.red())
+            self.__settings.editSetting('DEFAULT', 'pxcolg', newCol.green())
+            self.__settings.editSetting('DEFAULT', 'pxcolb', newCol.blue())
+
+    def __eventPauseResume(self):
+        ''''''
+        self.__pauseEmulator(not self.__isPaused)
+
+    def __eventReset(self):
+        ''''''
+        if self.__isRunning:
+            self.__gridFrame.clearPixels()
+            self.__chip8.reset()
+            self.__window.setStatusBar(self.__defaultStatus)
+            self.__isPaused = self.__isRunning = False
+
+    def __eventAbout(self):
+        ''''''
+        # Pause interpreter while dialog is shown
+        self.__pauseEmulator()
         msgBoxTitle = 'About'
         msgBoxText = 'Python CHIP-8 CPU Interpreter\nPython 3 and PyQt 4' + \
             '\n\nCopyright (C) 2015 Salinder Sidhu'
         # Render the message box
-        dialog = QtGui.QMessageBox.information(self.window, msgBoxTitle,
+        dialog = QtGui.QMessageBox.information(self.__window, msgBoxTitle,
                                                msgBoxText,
                                                buttons = QtGui.QMessageBox.Ok)
         # Resume interpreter when dialog is closed
-        self.pauseEmulator(False)
+        self.__pauseEmulator(False)
  
-    def eventLoadROM(self):
+    def __eventLoadROM(self):
         ''''''
         # Pause interpreter while dialog is shown
-        self.pauseEmulator()
-        filename = QtGui.QFileDialog.getOpenFileName(self.window,
-                                                     'Open File',
-                                                     '', 'CHIP8 ROM (*.c8)')
+        self.__pauseEmulator()
+        filename = QtGui.QFileDialog.getOpenFileName(self.__window,
+                                                     'Open File', '',
+                                                     'CHIP8 ROM (*.c8)')
         # Resume interpreter when dialog is closed
-        self.pauseEmulator(False)
+        self.__pauseEmulator(False)
         # Load the CHIP-8 ROM if the filename exists        
         if filename:
-            self.chip8.load_rom(filename)
-            self.window.setStatusBar(self.runningStatusText)
-            self.isRunning = True
+            self.__chip8.load_rom(filename)
+            self.__window.setStatusBar(self.__runStatus)
+            self.__isRunning = True
 
 if __name__ == '__main__':
-    myApp = InterpreterApp()
-    sys.exit(myApp.app.exec_())
+    # Pass command line arguments into application and launch it
+    myApp = InterpreterApp(sys.argv)
+    sys.exit(myApp.exec_())

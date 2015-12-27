@@ -1,64 +1,58 @@
 from PyQt4 import QtGui, QtCore
 
-class GUICanvas(QtGui.QFrame):
+class GridFrame(QtGui.QFrame):
     ''''''
 
-    def __init__(self, parent):
+    def __init__(self, parentWindow, width, height, pxSize, defaultbgColour,
+                 defaultpxColour):
         ''''''
-        super(GUICanvas, self).__init__(parent)
-        # Canvas GUI variables
-        self.__grid = []
-        self.__pxSize = 0
-        self.__gridWidth = 0
-        self.__gridHeight = 0
-        # Default pixel and background colours for the grid
-        self.__pxColour = (255, 255, 255)
-        self.__bgColour = (0, 0, 0)
-        # Set strong policy for focusing keyboard events to canvas
-        self.setFocusPolicy(QtCore.Qt.StrongFocus)
-
-    def setGrid(self, width, height, pxSize):
-        ''''''
+        super(GridFrame, self).__init__(parentWindow)
+        # Grid frame variables
         self.__grid = [[0 for _ in range(height)] for _ in range(width)]
         self.__pxSize = pxSize
-        self.__gridWidth = width
-        self.__gridHeight = height
+        self.__gWidth = width
+        self.__gHeight = height
+        # Default pixel and background colours
+        self.__pxColour = defaultpxColour
+        self.__bgColour = defaultbgColour
+        # Set strong policy for focusing keyboard events to GridFrame
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
 
-    def updateGrid(self, grid):
+    def updatePixels(self, grid):
         ''''''
         self.__grid = [row[:] for row in grid]
         self.update()
 
-    def updatePxColour(self, pxColour):
+    def clearPixels(self):
+        ''''''
+        self.__grid = [[0 for _ in range(self.__gHeight)] \
+                       for _ in range(self.__gWidth)]
+        self.update()
+
+    def changePixelColour(self, pxColour):
         ''''''
         self.__pxColour = pxColour
 
-    def updateBgColour(self, bgColour):
+    def changeBackgroundColour(self, bgColour):
         ''''''
         self.__bgColour = bgColour
 
-    def getPxColour(self):
+    def getPixelColour(self):
         ''''''
         return self.__pxColour
 
-    def getBgColour(self):
+    def getBackgroundColour(self):
         ''''''
         return self.__bgColour
-
-    def clearGrid(self):
-        ''''''
-        self.__grid = [[0 for _ in range(self.__gridHeight)] \
-                       for _ in range(self.__gridWidth)]
-        self.update()
 
     def paintEvent(self, event):
         ''''''
         painter = QtGui.QPainter(self)
-        # Clear the GUI canvas
+        # Clear all drawings on the GridFrame
         painter.eraseRect(0, 0, self.width(), self.height())
-        # Draw the pixels on the GUI canvas
-        for y in range(self.__gridHeight):
-            for x in range(self.__gridWidth):
+        # Draw the pixels on the GridFrame
+        for y in range(self.__gHeight):
+            for x in range(self.__gWidth):
                 if self.__grid[x][y]:
                     color = QtGui.QColor(self.__pxColour[0],
                                          self.__pxColour[1],

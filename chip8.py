@@ -14,74 +14,47 @@ class Chip8(object):
         self.__I = 0                # Address register
         self.__opCode = 0           # Operation code (string)
         self.__timers = [0, 0]      # Timers [delay, sound]
-        self.__isDraw = True        # Indicates when to draw
         self.__gfx = [[]]           # 2D graphics buffer
         self.__key = []             # I/O key list
         self.__stk = Stack()        # Main stack
         self.__ram = []             # Main memory
         self.__V = []               # Registers
         # The font set, used to draw plaintext characters
-        self.__fontSet = ['F0', '90', '90', '90', 'F0',
-                          '20', '60', '20', '20', '70',
-                          'F0', '10', 'F0', '80', 'F0',
-                          'F0', '10', 'F0', '10', 'F0',
-                          '90', '90', 'F0', '10', '10',
-                          'F0', '80', 'F0', '10', 'F0',
-                          'F0', '80', 'F0', '90', 'F0',
-                          'F0', '10', '20', '40', '40',
-                          'F0', '90', 'F0', '90', 'F0',
-                          'F0', '90', 'F0', '10', 'F0',
-                          'F0', '90', 'F0', '90', '90',
-                          'E0', '90', 'E0', '90', 'E0',
-                          'F0', '80', '80', '80', 'F0',
-                          'E0', '90', '90', '90', 'E0',
-                          'F0', '80', 'F0', '80', 'F0',
-                          'F0', '80', 'F0', '80', '80']
+        self.__fontSet = ['F0', '90', '90', '90', 'F0', '20', '60', '20', '20',
+                          '70', 'F0', '10', 'F0', '80', 'F0', 'F0', '10', 'F0',
+                          '10', 'F0', '90', '90', 'F0', '10', '10', 'F0', '80',
+                          'F0', '10', 'F0', 'F0', '80', 'F0', '90', 'F0', 'F0',
+                          '10', '20', '40', '40', 'F0', '90', 'F0', '90', 'F0',
+                          'F0', '90', 'F0', '10', 'F0', 'F0', '90', 'F0', '90',
+                          '90', 'E0', '90', 'E0', '90', 'E0', 'F0', '80', '80',
+                          '80', 'F0', 'E0', '90', '90', '90', 'E0', 'F0', '80',
+                          'F0', '80', 'F0', 'F0', '80', 'F0', '80', '80']
         # Opcode instruction jump tables
-        self.__opCodeTable = {'0': self.__inst0x0NNN,
-                              '1': self.__inst0x1NNN,
-                              '2': self.__inst0x2NNN,
-                              '3': self.__inst0x3XNN,
-                              '4': self.__inst0x4XNN,
-                              '5': self.__inst0x5XY0,
-                              '6': self.__inst0x6XNN,
-                              '7': self.__inst0x7XNN,
-                              '8': self.__inst0x8NNN,
-                              '9': self.__inst0x9XY0,
-                              'a': self.__inst0xANNN,
-                              'b': self.__inst0xBNNN,
-                              'c': self.__inst0xCXNN,
-                              'd': self.__inst0xDXYN,
-                              'e': self.__inst0xENNN,
-                              'f': self.__inst0xFNNN}
-        self.__table0x0NNN = {'e0': self.__inst0x00E0,
-                              'ee': self.__inst0x00EE}
-        self.__table0x8NNN = {'0': self.__inst0x8XY0,
-                              '1': self.__inst0x8XY1,
-                              '2': self.__inst0x8XY2,
-                              '3': self.__inst0x8XY3,
-                              '4': self.__inst0x8XY4,
-                              '5': self.__inst0x8XY5,
-                              '6': self.__inst0x8XY6,
-                              '7': self.__inst0x8XY7,
+        self.__opCodeTable = {'0': self.__inst0x0NNN, '1': self.__inst0x1NNN,
+                              '2': self.__inst0x2NNN, '3': self.__inst0x3XNN,
+                              '4': self.__inst0x4XNN, '5': self.__inst0x5XY0,
+                              '6': self.__inst0x6XNN, '7': self.__inst0x7XNN,
+                              '8': self.__inst0x8NNN, '9': self.__inst0x9XY0,
+                              'a': self.__inst0xANNN, 'b': self.__inst0xBNNN,
+                              'c': self.__inst0xCXNN, 'd': self.__inst0xDXYN,
+                              'e': self.__inst0xENNN, 'f': self.__inst0xFNNN}
+        self.__table0x0NNN = {'e0': self.__inst0x00E0, 'ee': self.__inst0x00EE}
+        self.__table0x8NNN = {'0': self.__inst0x8XY0, '1': self.__inst0x8XY1,
+                              '2': self.__inst0x8XY2, '3': self.__inst0x8XY3,
+                              '4': self.__inst0x8XY4, '5': self.__inst0x8XY5,
+                              '6': self.__inst0x8XY6, '7': self.__inst0x8XY7,
                               'e': self.__inst0x8XYE}
-        self.__table0xENNN = {'9e': self.__inst0xEX9E,
-                              'a1': self.__inst0xEXA1}
-        self.__table0xFNNN = {'07': self.__inst0xFX07,
-                              '0a': self.__inst0xFX0A,
-                              '15': self.__inst0xFX15,
-                              '18': self.__inst0xFX18,
-                              '1e': self.__inst0xFX18,
-                              '1e': self.__inst0xFX1E,
-                              '29': self.__inst0xFX29,
-                              '33': self.__inst0xFX33,
-                              '55': self.__inst0xFX55,
-                              '65': self.__inst0xFX65}
+        self.__table0xENNN = {'9e': self.__inst0xEX9E, 'a1': self.__inst0xEXA1}
+        self.__table0xFNNN = {'07': self.__inst0xFX07, '0a': self.__inst0xFX0A,
+                              '15': self.__inst0xFX15, '18': self.__inst0xFX18,
+                              '1e': self.__inst0xFX18, '1e': self.__inst0xFX1E,
+                              '29': self.__inst0xFX29, '33': self.__inst0xFX33,
+                              '55': self.__inst0xFX55, '65': self.__inst0xFX65}
 
     def reset(self):
         '''Reset the CHIP-8 system to it's original state. Clear all registers,
         graphics buffers, key mappings, timers, RAM buffer, stack and program
-        counter.'''
+        counter. Load the default fontset.'''
         self.__pc = 512
         self.__I = 0
         self.__opCode = 0
@@ -123,7 +96,6 @@ class Chip8(object):
         data.append(self.__V)
         data.append(self.__stk)
         data.append(self.__ram)
-        data.append(self.__isDraw)
         return data
 
     def setState(self, data):
@@ -137,7 +109,6 @@ class Chip8(object):
         self.__V = data[6]
         self.__stk = data[7]
         self.__ram = data[8]
-        self.__isDraw = data[9]
 
     def loadROM(self, filename):
         '''Load a file's binary data into the system's RAM buffer.'''
@@ -160,10 +131,10 @@ class Chip8(object):
         the instruction using the opcode table and execute the instruction.'''
         # Fetch opcode
         self.__opCode = self.__ram[self.__pc] + self.__ram[self.__pc + 1]
-        # Interpret opcode from table
+        # Execute opcode function from table
         self.__opCodeTable[self.__opCode[0]]()
         # Update timers
-        for i in range(2):
+        for i in range(len(self.__timers)):
             if self.__timers[i] > 0:
                 self.__timers[i] -= 1
 
@@ -186,7 +157,6 @@ class Chip8(object):
     def __inst0x00E0(self):
         '''0x00E0: Clear the graphics buffer.'''
         self.__gfx = [[0 for x in range(32)] for y in range(64)]
-        self.__isDraw = True
         self.__pc += 2
 
     def __inst0x00EE(self):
@@ -277,9 +247,9 @@ class Chip8(object):
         and 1 when there isn't.'''
         if self.__V[int(self.__opCode[1], 16)] > \
            self.__V[int(self.__opCode[2], 16)]:
-            self.__V[0xF] = 1
+            self.__V[15] = 1
         else:
-            self.__V[0xF] = 0  # There is a borrow
+            self.__V[15] = 0  # There is a borrow
         self.__V[int(self.__opCode[1], 16)] -= \
             self.__V[int(self.__opCode[2], 16)]
         self.__pc += 2
@@ -303,9 +273,9 @@ class Chip8(object):
         borrow, and 1 when there isn't.'''
         if self.__V[int(self.__opCode[2], 16)] > \
            self.__V[int(self.__opCode[1], 16)]:
-            self.__V[0xF] = 1
+            self.__V[15] = 1
         else:
-            self.__V[0xF] = 0
+            self.__V[15] = 0
         self.__V[int(self.__opCode[1], 16)] = \
             self.__V[int(self.__opCode[2], 16)] - \
             self.__V[int(self.__opCode[1], 16)]
@@ -369,33 +339,30 @@ class Chip8(object):
                 data[i] = '0' + data[i]
         # Drawing system
         for i in range(len(data)):
-            spriteRow = data[i]
             for j in range(8):
                 newX = x + j
+                newY = y
+                # Wrap to other side horizontally
                 if newX >= 64:
-                    # Wrap to other side
                     while newX >= 64:
                         newX -= 64
-                newY = y
+                # Wrap to other side vertically
                 if newY >= 32:
-                    # Wrap to other side
                     while newY >= 32:
                         newY -= 32
                 # XOR drawing mode
-                if spriteRow[j] == '1' and self.__gfx[newX][newY] == 1:
-                    self.__gfx[newX][newY] = 0
-                    self.__V[15] = 1
-                elif spriteRow[j] == '1' and self.__gfx[newX][newY] == 0:
-                    self.__gfx[newX][newY] = 1
-            # Move down for next row
-            y += 1
-        self.__isDraw = True
+                pxVal = int(data[i][j])
+                if pxVal:
+                    self.__gfx[newX][newY] = pxVal ^ self.__gfx[newX][newY]
+                    if not self.__gfx[newX][newY]:
+                        self.__V[15] = 1
+            y += 1  # Move down to draw the next row
         self.__pc += 2
 
     def __inst0xEX9E(self):
         '''EX9E: Skip the next instruction if the key stored in VX is
         pressed.'''
-        if self.__key[self.__V[int(self.__opCode[1], 16)]] == 1:
+        if self.__key[self.__V[int(self.__opCode[1], 16)]]:
             self.__pc += 4
         else:
             self.__pc += 2
@@ -403,7 +370,7 @@ class Chip8(object):
     def __inst0xEXA1(self):
         '''EXA1 Skip the next instruction if the key stored in VX is not
         pressed.'''
-        if self.__key[self.__V[int(self.__opCode[1], 16)]] == 0:
+        if not self.__key[self.__V[int(self.__opCode[1], 16)]]:
             self.__pc += 4
         else:
             self.__pc += 2
@@ -417,7 +384,7 @@ class Chip8(object):
         '''FX0A: Wait for a key press and stored the key in VX.'''
         isKeyPressed = False
         for i in range(16):
-            if self.__key[i] == 1:
+            if self.__key[i]:
                 self.__V[int(self.__opCode[1], 16)] = i
             isKeyPressed = True
         # If no key pressed, skip this cycle.

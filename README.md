@@ -3,7 +3,7 @@
 Description:
 -------------
 A Python based GUI implementation of the CHIP-8 system. A project I developed with the intention of gaining knowledge about emulators and cross platform GUI libraries.
-For more specific information about the CHIP-8 system, please refer to the following technical reference article on [CHIP-8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM).
+For more specific information about the CHIP-8 system, please refer to the following technical reference article on [CHIP-8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) and the [WIKI](https://en.wikipedia.org/wiki/CHIP-8).
 
 <p align="center">
 	<img src="http://i1379.photobucket.com/albums/ah129/SalinderSid/s1_zps6p4fo1gh.png" alt="Loaded ROM and Option menu."/>

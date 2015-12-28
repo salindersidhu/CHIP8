@@ -14,6 +14,13 @@ For more specific information about the CHIP-8 system, please refer to the follo
 	<img src="http://i1379.photobucket.com/albums/ah129/SalinderSid/s4_zpsthjnlyv3.png" alt="About dialog."/>
 </p>
 
+Features:
+-------------
+- Implementation of all 35 CHIP-8 opcodes
+- Custom pixel and background colour rendering
+- Saving and loading of emulation state
+- Sound effect support
+
 Supports:
 -------------
 - Microsoft Windows 7, 8, 8.1, 10
@@ -101,7 +108,7 @@ The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interprete
 
 Troubleshooting:
 -------------
-This application is cross platform compatible with most PC operating systems (`Windows`, `Linux` and `MAC`). If the application crashes, a log is generated in the application's directory. This log contains error and exception details on why the application crashed.
+This application is cross platform compatible with most operating systems (`Windows`, `Linux` and `MAC`). If the application crashes, a log is generated in the application's directory. This log contains error and exception details on why the application crashed.
 
 License:
 -------------

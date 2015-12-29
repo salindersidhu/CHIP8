@@ -1,7 +1,6 @@
 #Python CHIP-8 Interpreter
 
-Description:
--------------
+##Description:
 A Python based GUI implementation of the CHIP-8 system. A project I developed with the intention of gaining knowledge about emulators and cross platform GUI libraries.
 For more specific information about the CHIP-8 system, please refer to the following technical reference article on [CHIP-8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) and the [WIKI](https://en.wikipedia.org/wiki/CHIP-8).
 
@@ -14,39 +13,42 @@ For more specific information about the CHIP-8 system, please refer to the follo
 	<img src="http://i1379.photobucket.com/albums/ah129/SalinderSid/s4_zpsthjnlyv3.png" alt="About dialog."/>
 </p>
 
-Features:
--------------
+##Features:
 - Implementation of all 35 CHIP-8 opcodes
 - Custom pixel and background colour rendering
 - Saving and loading of emulation state
 - Sound effect support
 
-Supports:
--------------
+##Supports:
 - Microsoft Windows 7, 8, 8.1, 10
-- Linux based distributions
-- MAC OS X
+- Linux and Unix based distributions
 
-ROMs:
--------------
+##ROMs:
 ROMs for the CHIP-8 system can be downloaded for free at [Chip8.com](http://www.chip8.com/?page=84) and [Zophar's Domain](http://www.zophar.net/pdroms/chip8.html). In order to load these ROMs with the interpreter, the files must be renamed to have a `.c8` extension.
 
-Dependencies:
--------------
+##Dependencies:
 - `Python 3` [(Build 3.4)](https://www.python.org/downloads/)
 - `PyQt 4` [(Build 4.11)](https://riverbankcomputing.com/software/pyqt/download)
 
-Running the Interpreter:
--------------
+##Running the Interpreter:
+
+###Windows:
 1. Clone the repo to obtain the source code
 2. Download and install `Python3`
 3. Download and install `PyQt 4`
-4. Open a `command prompt` or `console` and navigate to the cloned repo's directory using the `cd` command
+4. Open a `command prompt` and navigate to the cloned repo's directory using the `cd` command
 5. Run the following command, `python interpreterapp.py` to launch the interpreter GUI
-6. Load a ROM to test the interpreter, ensure that the ROM file has a `.c8` extension
+6. Load a ROM, ensure that the ROM file has a `.c8` extension
 
-Controls:
--------------
+###Linux:
+1. Clone the repo to obtain the source code
+2. If needed, install python3 by running the command `sudo apt-get install python3` from the terminal
+3. To install PyQt 4 run the following command from the terminal `sudo apt-get install python3-pyqt4`
+4. Navigate to the cloned repo's directory from the terminal using the `cd` command
+5. Run the following command from the terminal, `python3 interpreterapp.py` to launch the interpreter GUI
+6. Load a ROM, ensure that the ROM file has a `.c8` extension
+
+##Controls:
 The CHIP-8 system uses a `hexadecimal keyboard` that has 16 keys from 0 to 9 and A to F. Keys `2`, `4`, `6` and `8` are typically used for directional input.
 
 The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interpreter Keybinds` used in the application.
@@ -106,12 +108,10 @@ The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interprete
 	</tr>
 </table>
 
-Troubleshooting:
--------------
+##Troubleshooting:
 This application is cross platform compatible with most operating systems (`Windows`, `Linux` and `MAC`). If the application crashes, a log is generated in the application's directory. This log contains error and exception details on why the application crashed.
 
-License:
--------------
+##License:
 Copyright (c) 2015 Salinder Sidhu
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:

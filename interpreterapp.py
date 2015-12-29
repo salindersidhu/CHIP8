@@ -229,7 +229,10 @@ class InterpreterApp(QtGui.QApplication):
             self.__pauseEmulator()
             filename = QtGui.QFileDialog.getSaveFileName(self.__window,
                                                          'Save State', '',
-                                                         'State Data (*.dat)')
+                                                         'State Data (*.dat)',
+                                                         options=QtGui.
+                                                         QFileDialog.
+                                                         DontUseNativeDialog)
             # Resume interpreter when dialog is closed
             self.__pauseEmulator(False)
             # Save the state of the CHIP-8 CPU to a file
@@ -248,7 +251,9 @@ class InterpreterApp(QtGui.QApplication):
         self.__pauseEmulator()
         filename = QtGui.QFileDialog.getOpenFileName(self.__window,
                                                      'Load State', '',
-                                                     'State Data (*.dat)')
+                                                     'State Data (*.dat)',
+                                                     options=QtGui.QFileDialog.
+                                                     DontUseNativeDialog)
         # Resume interpreter when dialog is closed
         self.__pauseEmulator(False)
         # Load the state of the CHIP-8 CPU from a file
@@ -317,7 +322,9 @@ class InterpreterApp(QtGui.QApplication):
         self.__pauseEmulator()
         filename = QtGui.QFileDialog.getOpenFileName(self.__window,
                                                      'Open File', '',
-                                                     'CHIP8 ROM (*.c8)')
+                                                     'CHIP8 ROM (*.c8)',
+                                                     options=QtGui.QFileDialog.
+                                                     DontUseNativeDialog)
         # Resume interpreter when dialog is closed
         self.__pauseEmulator(False)
         # Load the CHIP-8 ROM if the filename exists

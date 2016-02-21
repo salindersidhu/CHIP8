@@ -1,6 +1,5 @@
 import sys
 import pickle
-import traceback
 from PyQt4 import QtGui, QtCore
 from chip8 import Chip8
 from settings import Settings
@@ -162,15 +161,12 @@ class InterpreterApp(QtGui.QApplication):
             lambda: self.__chip8.setKeyState(15, 0)]
         self.__window.updateKeyBindings(self.__keyBindings)
 
-    def __logExceptionToFile(self, exceptionTrace):
-        '''Display an error message and write the exception trace to a
-        specified log file.'''
-        message = 'The application has crashed!\n\nPlease refer to ' + \
-            self.__debugLog + ' for more information!'
+    def __showException(self, exception):
+        '''Show a popup message box with the exception that occured.'''
+        message = 'The application has crashed!\n\nERROR: ' + \
+            exception.split(':')[0]
         QtGui.QMessageBox.critical(self.__window, 'Error', message,
                                    buttons=QtGui.QMessageBox.Ok)
-        debugFile = open(self.__debugLog, 'w')
-        debugFile.write(exceptionTrace)
 
     def __emulate(self):
         '''Emulate the CHIP-8 system using a timer that executes some number
@@ -183,9 +179,9 @@ class InterpreterApp(QtGui.QApplication):
                 self.__handleSound(self.__chip8.getSoundTimer())
                 self.__gridFrame.updatePixels(self.__chip8.getGFX())
         except:
-            # Exception was caught, log it and terminate application
+            # Exception caught, display message and terminate
             self.__isRunning = False
-            self.__logExceptionToFile(traceback.format_exc())
+            self.__showException(str(sys.exc_info()[1]))
             self.__window.close()
         finally:
             QtCore.QTimer.singleShot(1 / self.__FPS, self.__emulate)

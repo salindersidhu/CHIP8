@@ -8,6 +8,10 @@ class Stack(object):
         # Create an empty list to store stack content
         self.__stk_pointer = []
 
+    def isEmpty(self):
+        '''Return true if stack is empty, false otherwise.'''
+        return len(self._stk_pointer) == 0
+
     def clear(self):
         '''Clear the stack.'''
         self.__stk_pointer = []

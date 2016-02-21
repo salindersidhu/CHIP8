@@ -1,118 +1,53 @@
-#Python CHIP-8 Interpreter
+# Python CHIP-8 Interpreter
 
-##Description:
+## Description:
 A Python based GUI implementation of the CHIP-8 system. A project I developed with the intention of gaining knowledge about emulators and cross platform GUI libraries.
 For more specific information about the CHIP-8 system, please refer to the following technical reference article on [CHIP-8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) and the [WIKI](https://en.wikipedia.org/wiki/CHIP-8).
 
-<p align="center">
-	<img src="http://i1379.photobucket.com/albums/ah129/SalinderSid/s1_zps6p4fo1gh.png" alt="Loaded ROM and Option menu."/>
-	<img src="http://i1379.photobucket.com/albums/ah129/SalinderSid/s3_zpsaoyyf98b.png" alt="Loaded ROM running."/>
+<p align='center'>
+	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/s1_zps6p4fo1gh.png' alt='Screenshot1'/>
+	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/s3_zpsaoyyf98b.png' alt='Screenshot2'/>
 </p>
-<p align="center">
-	<img src="http://i1379.photobucket.com/albums/ah129/SalinderSid/s2_zpsq4tteay3.png" alt="Change pixel colour selection dialog."/>
-	<img src="http://i1379.photobucket.com/albums/ah129/SalinderSid/s4_zpsthjnlyv3.png" alt="About dialog."/>
+<p align='center'>
+	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/s2_zpsq4tteay3.png' alt='Screenshot3'/>
+	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/s4_zpsthjnlyv3.png' alt='Screenshot4'/>
 </p>
 
-##Features:
+## Features:
 - Implementation of all 35 CHIP-8 opcodes
 - Custom pixel and background colour rendering
 - Saving and loading of emulation state
 - Sound effect support
 
-##Supports:
+## Supports:
 - Microsoft Windows 7, 8, 8.1, 10
-- Linux and Unix based distributions
+- Linux based distributions
+- Mac OS X
 
-##ROMs:
+## ROMs:
 ROMs for the CHIP-8 system can be downloaded for free at [Chip8.com](http://www.chip8.com/?page=84) and [Zophar's Domain](http://www.zophar.net/pdroms/chip8.html). In order to load these ROMs with the interpreter, the files must be renamed to have a `.c8` extension.
 
-##Dependencies:
-- `Python 3` [(Build 3.4)](https://www.python.org/downloads/)
-- `PyQt 4` [(Build 4.11)](https://riverbankcomputing.com/software/pyqt/download)
+## Dependencies:
+- Python 3 [(Build 3.4)](https://www.python.org/downloads/)
+- PyQt 4 [(Build 4.11)](https://riverbankcomputing.com/software/pyqt/download)
 
-##Running the Interpreter:
+## Running the Interpreter:
+1. Download and install Python 3
++ Download and install PyQt 4
++ To launch the interpreter, open a terminal or command prompt and type `python 3 diskmap.py`
++ To load a ROM, ensure that the ROM file has a `.c8` extension
 
-###Windows:
-1. Clone the repo to obtain the source code
-2. Download and install `Python3`
-3. Download and install `PyQt 4`
-4. Open a `command prompt` and navigate to the cloned repo's directory using the `cd` command
-5. Run the following command, `python interpreterapp.py` to launch the interpreter GUI
-6. Load a ROM, ensure that the ROM file has a `.c8` extension
-
-###Linux:
-1. Clone the repo to obtain the source code
-2. If needed, install python3 by running the command `sudo apt-get install python3` from the terminal
-3. To install PyQt 4 run the following command from the terminal `sudo apt-get install python3-pyqt4`
-4. Navigate to the cloned repo's directory from the terminal using the `cd` command
-5. Run the following command from the terminal, `python3 interpreterapp.py` to launch the interpreter GUI
-6. Load a ROM, ensure that the ROM file has a `.c8` extension
-
-##Controls:
+## Controls:
 The CHIP-8 system uses a `hexadecimal keyboard` that has 16 keys from 0 to 9 and A to F. Keys `2`, `4`, `6` and `8` are typically used for directional input.
 
-The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interpreter Keybinds` used in the application.
+The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interpreter KeyBoard` used in the application.
 
-<table>
-	<caption>CHIP-8 Keyboard</caption>
-	<tr>
-		<td><b>1</b></td>
-		<td><b>2</b></td>
-		<td><b>3</b></td>
-		<td><b>C</b></td>
-	</tr>
-	<tr>
-		<td><b>4</b></td>
-		<td><b>5</b></td>
-		<td><b>6</b></td>
-		<td><b>D</b></td>
-	</tr>
-	<tr>
-		<td><b>7</b></td>
-		<td><b>8</b></td>
-		<td><b>9</b></td>
-		<td><b>E</b></td>
-	</tr>
-	<tr>
-		<td><b>A</b></td>
-		<td><b>0</b></td>
-		<td><b>B</b></td>
-		<td><b>F</b></td>
-	</tr>
-</table>
-<table>
-	<caption>Interpreter Keybinds</caption>
-	<tr>
-		<td><b>1</b></td>
-		<td><b>2</b></td>
-		<td><b>3</b></td>
-		<td><b>4</b></td>
-	</tr>
-	<tr>
-		<td><b>Q</b></td>
-		<td><b>W</b></td>
-		<td><b>E</b></td>
-		<td><b>R</b></td>
-	</tr>
-	<tr>
-		<td><b>A</b></td>
-		<td><b>S</b></td>
-		<td><b>D</b></td>
-		<td><b>F</b></td>
-	</tr>
-	<tr>
-		<td><b>Z</b></td>
-		<td><b>X</b></td>
-		<td><b>C</b></td>
-		<td><b>V</b></td>
-	</tr>
-</table>
+<p align='center'>
+	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/Untitled_zpswta7n6gq.png' alt='Keyboard Tables'/>
+</p>
 
-##Troubleshooting:
-This application is cross platform compatible with most operating systems (`Windows`, `Linux` and `MAC`). If the application crashes, a log is generated in the application's directory. This log contains error and exception details on why the application crashed.
-
-##License:
-Copyright (c) 2015 Salinder Sidhu
+## License:
+Copyright &copy; 2016 Salinder Sidhu
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

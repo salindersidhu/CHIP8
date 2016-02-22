@@ -16,12 +16,18 @@ class InterpreterApp(QtGui.QApplication):
     def __init__(self, args):
         '''Create a new InterpreterApp with arguments specified by args.'''
         super(InterpreterApp, self).__init__(args)
-        # Application variables
+        # Application constants and variables
         self.__FPS = 60
+        self.__WIDTH = 640
+        self.__HEIGHT = 360
+        self.__WHITE = (255, 255, 255)
+        self.__BLACK = (0, 0, 0)
+        self.__WINTITLE = 'Python CHIP-8 Interpreter'
+        self.__ICON = 'Resources/icon.png'
         self.__defaultStatus = 'Please load a ROM file...'
         self.__pausedStatus = 'PAUSED'
         self.__runStatus = 'Running...'
-        self.__debugLog = 'debugLog.txt'
+        self.__pauseLock = False
         self.__isPaused = False
         self.__isRunning = False
         self.__chip8 = Chip8()
@@ -30,11 +36,11 @@ class InterpreterApp(QtGui.QApplication):
         # Configure Settings
         self.__settings = Settings('settings.ini')
         # Configure the GUIWindow
-        self.__window = GUIWindow('Python CHIP-8 Interpreter', 640, 360,
-                                  'Resources/icon.png')
+        self.__window = GUIWindow(self.__WINTITLE, self.__WIDTH, self.__HEIGHT,
+                                  self.__ICON)
         # Configure the GridFrame
-        self.__gridFrame = GridFrame(self.__window, 64, 32, 10, (0, 0, 0),
-                                     (255, 255, 255))
+        self.__gridFrame = GridFrame(self.__window, 64, 32, 10, self.__BLACK,
+                                     self.__WHITE)
         self.__window.setCentralWidget(self.__gridFrame)
         # Setup remaining GUI elements
         self.__loadSettings()
@@ -92,8 +98,8 @@ class InterpreterApp(QtGui.QApplication):
         self.__window.addMenuItem('File', 'Quit', self.__window.close)
         # Setup Option menu items
         self.__window.addMenuItem('Options', 'Reset', self.__eventReset)
-        self.__window.addMenuItem('Options', 'Pause / Resume',
-                                  self.__eventPauseResume)
+        self.__window.addCheckableMenuItem('Options', 'Pause', False,
+                                           self.__eventPauseResume)
         self.__window.addMenuSeperator('Options')
         self.__window.addMenuItem('Options', 'Save State',
                                   self.__eventSaveState)
@@ -201,7 +207,8 @@ class InterpreterApp(QtGui.QApplication):
                                                          defColour[2]),
                                             self.__window)
         # Resume interpreter when dialog is closed
-        self.__pauseEmulator(False)
+        if not self.__pauseLock:
+            self.__pauseEmulator(False)
         return color
 
     def __pauseEmulator(self, action=True):
@@ -214,6 +221,9 @@ class InterpreterApp(QtGui.QApplication):
                 self.__window.setStatusBar(self.__pausedStatus)
             else:
                 self.__window.setStatusBar(self.__runStatus)
+        else:
+            # Uncheck pause menu option item
+            self.__window.setCheckedMenuItem('Pause', False)
 
     def __eventSaveState(self):
         '''Display a save file dialog and save the current state of the CHIP-8
@@ -230,15 +240,17 @@ class InterpreterApp(QtGui.QApplication):
                                                          QFileDialog.
                                                          DontUseNativeDialog)
             # Resume interpreter when dialog is closed
-            self.__pauseEmulator(False)
+            if not self.__pauseLock:
+                self.__pauseEmulator(False)
             # Save the state of the CHIP-8 CPU to a file
             if filename:
                 pickle.dump(self.__chip8.getState(), open(filename, 'wb'))
         else:
             # Display error message
-            QtGui.QMessageBox.critical(self.__window, 'Error', 'Could not ' +
-                                       'save state. Please load a ROM first.',
-                                       buttons=QtGui.QMessageBox.Ok)
+            QtGui.QMessageBox.information(self.__window, 'Information',
+                                          'Please load a ROM first before ' +
+                                          'saving its state.',
+                                          buttons=QtGui.QMessageBox.Ok)
 
     def __eventLoadState(self):
         '''Display an open file dialog and load the state of a previously saved
@@ -251,7 +263,8 @@ class InterpreterApp(QtGui.QApplication):
                                                      options=QtGui.QFileDialog.
                                                      DontUseNativeDialog)
         # Resume interpreter when dialog is closed
-        self.__pauseEmulator(False)
+        if not self.__pauseLock:
+            self.__pauseEmulator(False)
         # Load the state of the CHIP-8 CPU from a file
         if filename:
             self.__chip8.setState(pickle.load(open(filename, 'rb')))
@@ -287,6 +300,8 @@ class InterpreterApp(QtGui.QApplication):
     def __eventPauseResume(self):
         '''Pause the CHIP-8 system if it is current running, otherwise resume
         the state of the CHIP-8 system if it is paused.'''
+        if self.__isRunning:
+            self.__pauseLock = not self.__pauseLock
         self.__pauseEmulator(not self.__isPaused)
 
     def __eventReset(self):
@@ -296,7 +311,9 @@ class InterpreterApp(QtGui.QApplication):
             self.__gridFrame.clearPixels()
             self.__chip8.reset()
             self.__window.setStatusBar(self.__defaultStatus)
-            self.__isPaused = self.__isRunning = False
+            self.__isPaused = self.__isRunning = self.__pauseLock = False
+            # Uncheck Pause menu option item
+            self.__window.setCheckedMenuItem('Pause', False)
 
     def __eventAbout(self):
         '''Display an information dialog about the program languages and tools
@@ -309,7 +326,8 @@ class InterpreterApp(QtGui.QApplication):
         QtGui.QMessageBox.information(self.__window, 'About', message,
                                       buttons=QtGui.QMessageBox.Ok)
         # Resume interpreter when dialog is closed
-        self.__pauseEmulator(False)
+        if not self.__pauseLock:
+            self.__pauseEmulator(False)
 
     def __eventLoadROM(self):
         '''Display a open file dialog and load a ROM from the file specified
@@ -322,7 +340,8 @@ class InterpreterApp(QtGui.QApplication):
                                                      options=QtGui.QFileDialog.
                                                      DontUseNativeDialog)
         # Resume interpreter when dialog is closed
-        self.__pauseEmulator(False)
+        if not self.__pauseLock:
+            self.__pauseEmulator(False)
         # Load the CHIP-8 ROM if the filename exists
         if filename:
             self.__chip8.loadROM(filename)

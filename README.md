@@ -5,7 +5,7 @@ A Python based GUI implementation of the CHIP-8 system. A project I developed wi
 For more specific information about the CHIP-8 system, please refer to the following technical reference article on [CHIP-8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) and the [WIKI](https://en.wikipedia.org/wiki/CHIP-8).
 
 <p align='center'>
-	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/s1_zps6p4fo1gh.png' alt='Screenshot1'/>
+	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/Screenshot%202016-02-21%2019.52.53_zpswbghx0ib.png' alt='Screenshot1'/>
 	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/s3_zpsaoyyf98b.png' alt='Screenshot2'/>
 </p>
 <p align='center'>

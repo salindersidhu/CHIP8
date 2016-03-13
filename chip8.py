@@ -86,29 +86,30 @@ class Chip8(object):
 
     def getState(self):
         '''Return the state of the system.'''
-        data = []
-        data.append(self.__pc)
-        data.append(self.__I)
-        data.append(self.__opCode)
-        data.append(self.__timers)
-        data.append(self.__gfx)
-        data.append(self.__key)
-        data.append(self.__V)
-        data.append(self.__stk)
-        data.append(self.__ram)
-        return data
+        stateData = {
+            'PRC': self.__pc,
+            'ADR': self.__I,
+            'OPC': self.__opCode,
+            'TIM': self.__timers,
+            'GFX': self.__gfx,
+            'KEY': self.__key,
+            'REG': self.__V,
+            'STK': self.__stk,
+            'RAM': self.__ram
+        }
+        return stateData
 
-    def setState(self, data):
+    def setState(self, stateData):
         '''Set the state of the system.'''
-        self.__pc = data[0]
-        self.__I = data[1]
-        self.__opCode = data[2]
-        self.__timers = data[3]
-        self.__gfx = data[4]
-        self.__key = data[5]
-        self.__V = data[6]
-        self.__stk = data[7]
-        self.__ram = data[8]
+        self.__pc = stateData['PRC']
+        self.__I = stateData['ADR']
+        self.__opCode = stateData['OPC']
+        self.__timers = stateData['TIM']
+        self.__gfx = stateData['GFX']
+        self.__key = stateData['KEY']
+        self.__V = stateData['REG']
+        self.__stk = stateData['STK']
+        self.__ram = stateData['RAM']
 
     def loadROM(self, filename):
         '''Load a file's binary data into the system's RAM buffer.'''

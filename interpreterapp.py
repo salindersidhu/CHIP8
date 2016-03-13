@@ -235,10 +235,13 @@ class InterpreterApp(QtGui.QApplication):
             self.__pauseEmulator()
             filename = QtGui.QFileDialog.getSaveFileName(self.__window,
                                                          'Save State', '',
-                                                         'State Data (*.dat)',
+                                                         'Saved Data (*.sav)',
                                                          options=QtGui.
                                                          QFileDialog.
                                                          DontUseNativeDialog)
+            # Add the .sav extension to the filename if it doesn't exist
+            if not filename.endswith('.sav'):
+                filename += '.sav'
             # Resume interpreter when dialog is closed
             if not self.__pauseLock:
                 self.__pauseEmulator(False)
@@ -259,7 +262,7 @@ class InterpreterApp(QtGui.QApplication):
         self.__pauseEmulator()
         filename = QtGui.QFileDialog.getOpenFileName(self.__window,
                                                      'Load State', '',
-                                                     'State Data (*.dat)',
+                                                     'Saved Data (*.sav)',
                                                      options=QtGui.QFileDialog.
                                                      DontUseNativeDialog)
         # Resume interpreter when dialog is closed

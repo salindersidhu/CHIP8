@@ -34,7 +34,7 @@ ROMs for the CHIP-8 system can be downloaded for free at [Chip8.com](http://www.
 ## Running the Interpreter:
 1. Download and install Python 3
 + Download and install PyQt 4
-+ To launch the interpreter, open a terminal or command prompt and type `python 3 diskmap.py`
++ To launch the interpreter, open a terminal or command prompt and type `python3 interpreterapp.py`
 + To load a ROM, ensure that the ROM file has a `.c8` extension
 
 ## Controls:

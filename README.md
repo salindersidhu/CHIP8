@@ -47,4 +47,4 @@ The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interprete
 </p>
 
 ## License:
-MIT
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](/LICENSE.md)

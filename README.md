@@ -5,12 +5,12 @@ A Python based GUI implementation of the CHIP-8 system. A project I developed wi
 For more specific information about the CHIP-8 system, please refer to the following technical reference article on [CHIP-8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) and the [WIKI](https://en.wikipedia.org/wiki/CHIP-8).
 
 <p align='center'>
-	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/Screenshot%202016-02-21%2019.52.53_zpswbghx0ib.png' alt='Screenshot1'/>
-	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/s3_zpsaoyyf98b.png' alt='Screenshot2'/>
+	<img src='screenshot1.png' alt='Screenshot1'/>
+	<img src='screenshot3.png' alt='Screenshot3'/>
 </p>
 <p align='center'>
-	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/s2_zpsq4tteay3.png' alt='Screenshot3'/>
-	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/s4_zpsthjnlyv3.png' alt='Screenshot4'/>
+	<img src='screenshot2.png' alt='Screenshot2'/>
+	<img src='screenshot4.png' alt='Screenshot4'/>
 </p>
 
 ## Features:
@@ -43,7 +43,7 @@ The CHIP-8 system uses a `hexadecimal keyboard` that has 16 keys from 0 to 9 and
 The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interpreter KeyBoard` used in the application.
 
 <p align='center'>
-	<img src='http://i1379.photobucket.com/albums/ah129/SalinderSid/Untitled_zpswta7n6gq.png' alt='Keyboard Tables'/>
+	<img src='keyboard.png' alt='Keyboard Tables'/>
 </p>
 
 ## License:

@@ -1,4 +1,4 @@
-import configparser
+import ConfigParser
 
 
 class Settings:
@@ -13,7 +13,7 @@ class Settings:
                                             ' data!')
         # Settings variables
         self.__filename = filename
-        self.__config = configparser.ConfigParser()
+        self.__config = ConfigParser.ConfigParser()
         # Load settings from existing file (if one exists)
         self.__isEmpty = len(self.__config.read(self.__filename)) == 0
 
@@ -33,7 +33,7 @@ class Settings:
         '''Return a setting value from the specified category and setting
         key.'''
         try:
-            return self.__config[category][key]
+            return self.__config.get(category, key)
         except KeyError:
             raise self.__settingException
 
@@ -41,7 +41,7 @@ class Settings:
         '''Change an existing setting with a specified category and setting key
         to the value specified. Save the new settings data to a file.'''
         try:
-            self.__config[category][key] = str(value)
+            self.__config.set(category, key, value)
             self.__saveAllSettings()
         except KeyError:
             raise self.__settingException

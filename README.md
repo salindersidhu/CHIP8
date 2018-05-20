@@ -5,12 +5,12 @@ A Python based GUI implementation of the CHIP-8 system. A project I developed wi
 For more specific information about the CHIP-8 system, please refer to the following technical reference article on [CHIP-8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) and the [WIKI](https://en.wikipedia.org/wiki/CHIP-8).
 
 <p align='center'>
-	<img src='screenshot1.png' alt='Screenshot1'/>
-	<img src='screenshot3.png' alt='Screenshot3'/>
+	<img src='https://user-images.githubusercontent.com/12175684/40276001-20feafdc-5bcd-11e8-9565-7f28666f3405.png' alt='Screenshot1'/>
+	<img src='https://user-images.githubusercontent.com/12175684/40276004-232303ee-5bcd-11e8-89cc-40c9ddbd2e1f.png' alt='Screenshot3'/>
 </p>
 <p align='center'>
-	<img src='screenshot2.png' alt='Screenshot2'/>
-	<img src='screenshot4.png' alt='Screenshot4'/>
+	<img src='https://user-images.githubusercontent.com/12175684/40276002-22096caa-5bcd-11e8-95a9-9354ef8b791f.png' alt='Screenshot2'/>
+	<img src='https://user-images.githubusercontent.com/12175684/40276005-244b9c7c-5bcd-11e8-8d79-7fb4543b6182.png' alt='Screenshot4'/>
 </p>
 
 ## Features:
@@ -43,7 +43,7 @@ The CHIP-8 system uses a `hexadecimal keyboard` that has 16 keys from 0 to 9 and
 The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interpreter KeyBoard` used in the application.
 
 <p align='center'>
-	<img src='keyboard.png' alt='Keyboard Tables'/>
+	<img src='https://user-images.githubusercontent.com/12175684/40276007-26e1efd6-5bcd-11e8-8e4b-b615659797ee.png' alt='Keyboard'/>
 </p>
 
 ## License:

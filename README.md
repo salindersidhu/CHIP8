@@ -35,7 +35,7 @@ For more specific information about the CHIP-8 system, please refer to the follo
 
 ## ROMs:
 
-ROMs for the CHIP-8 system can be obtained online for free at [Internet Archive](https://archive.org/details/Chip-8RomsThatAreInThePublicDomain). In order to load these ROMs with the interpreter, the files must be renamed to have a `.c8` extension.
+ROMs for the CHIP-8 system can be obtained online for free at [Internet Archive](https://archive.org/details/Chip-8RomsThatAreInThePublicDomain).
 
 # Development
 

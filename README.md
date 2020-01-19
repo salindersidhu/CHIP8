@@ -22,6 +22,10 @@
 A Python based GUI implementation of the CHIP-8 system. A project I developed with the intention of gaining knowledge about emulators and cross platform GUI libraries.
 For more specific information about the CHIP-8 system, please refer to the following technical reference article on [CHIP-8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) and the [WIKI](https://en.wikipedia.org/wiki/CHIP-8).
 
+<p align="center">
+	<img src="https://user-images.githubusercontent.com/12175684/72684765-58b37600-3ab1-11ea-9b5c-9a9ea3b9d52c.gif" alt="screen capture"/>
+</p>
+
 ## Features:
 
 - Implementation of all 35 CHIP-8 opcodes
@@ -86,6 +90,8 @@ Your command line will be prefixed with `(venv)` which indicates that the virtua
 ```bash
 pip install -r requirements.txt
 ```
+
+If you have recently pulled changes from a remote branch, you should re-run the above command to obtain any new dependencies that may have been added to the project.
 
 ## Running:
 

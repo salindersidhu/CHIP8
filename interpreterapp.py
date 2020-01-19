@@ -4,6 +4,7 @@ from settings import Settings
 from chip8.chip8 import Chip8
 from gridframe import GridFrame
 from guiwindow import GUIWindow
+from colormap import rgb2hex, hex2rgb
 from PyQt5 import QtGui, QtCore, QtWidgets, QtMultimedia
 
 
@@ -18,7 +19,6 @@ class InterpreterApp(QtWidgets.QApplication):
         '''Create a new InterpreterApp with arguments specified by args.'''
         super(InterpreterApp, self).__init__(args)
         # Application constants and variables
-        self.__FPS = 60
         self.__WIDTH = 640
         self.__HEIGHT = 360
         self.__WHITE = (255, 255, 255)
@@ -64,30 +64,21 @@ class InterpreterApp(QtWidgets.QApplication):
         colour.'''
         # Save default settings to file if they no settings data exists
         if self.__settings.isEmpty():
-            defaults = {}
+            colours = {}
             # Get the default value for the pixel colour
-            pixelColour = self.__gridFrame.getPixelColour()
-            defaults['pxcolr'] = pixelColour[0]
-            defaults['pxcolg'] = pixelColour[1]
-            defaults['pxcolb'] = pixelColour[2]
+            colours['pixel'] = rgb2hex(*self.__gridFrame.getPixelColour())
             # Get the  default value for the background color
-            backgroundColour = self.__gridFrame.getBackgroundColour()
-            defaults['bgcolr'] = backgroundColour[0]
-            defaults['bgcolg'] = backgroundColour[1]
-            defaults['bgcolb'] = backgroundColour[2]
+            colours['background'] = rgb2hex(
+                *self.__gridFrame.getBackgroundColour())
             # Add and save default settings
-            self.__settings.addNewSetting('DEFAULT', defaults)
+            self.__settings.addNewSetting('COLOURS', colours)
         else:
             # Load settings for pixel colour
-            pxRed = int(self.__settings.getSetting('DEFAULT', 'pxcolr'))
-            pxGreen = int(self.__settings.getSetting('DEFAULT', 'pxcolg'))
-            pxBlue = int(self.__settings.getSetting('DEFAULT', 'pxcolb'))
-            self.__gridFrame.changePixelColour((pxRed, pxGreen, pxBlue))
+            self.__gridFrame.changePixelColour(
+                hex2rgb(self.__settings.getSetting('COLOURS', 'pixel')))
             # Load settings for background colour
-            bgRed = int(self.__settings.getSetting('DEFAULT', 'bgcolr'))
-            bgGreen = int(self.__settings.getSetting('DEFAULT', 'bgcolg'))
-            bgBlue = int(self.__settings.getSetting('DEFAULT', 'bgcolb'))
-            self.__gridFrame.changeBackgroundColour((bgRed, bgGreen, bgBlue))
+            self.__gridFrame.changeBackgroundColour(
+                hex2rgb(self.__settings.getSetting('COLOURS', 'background')))
 
     def __setupMenu(self):
         '''Add all the menus used in the application to GUIWindow.'''
@@ -298,9 +289,8 @@ class InterpreterApp(QtWidgets.QApplication):
             newBgColour = (newCol.red(), newCol.green(), newCol.blue())
             self.__gridFrame.changeBackgroundColour(newBgColour)
             # Save the new background colour to settings
-            self.__settings.editSetting('DEFAULT', 'bgcolr', newCol.red())
-            self.__settings.editSetting('DEFAULT', 'bgcolg', newCol.green())
-            self.__settings.editSetting('DEFAULT', 'bgcolb', newCol.blue())
+            self.__settings.editSetting(
+                'COLOURS', 'background', rgb2hex(*newBgColour))
 
     def __eventChangePxColour(self):
         '''Change the current value of the GridFrame's background colour and
@@ -311,9 +301,8 @@ class InterpreterApp(QtWidgets.QApplication):
             newPxColour = (newCol.red(), newCol.green(), newCol.blue())
             self.__gridFrame.changePixelColour(newPxColour)
             # Save the new pixel colour to settings
-            self.__settings.editSetting('DEFAULT', 'pxcolr', newCol.red())
-            self.__settings.editSetting('DEFAULT', 'pxcolg', newCol.green())
-            self.__settings.editSetting('DEFAULT', 'pxcolb', newCol.blue())
+            self.__settings.editSetting(
+                'COLOURS', 'pixel', rgb2hex(*newPxColour))
 
     def __eventPauseResume(self):
         '''Pause the CHIP-8 system if it is current running, otherwise resume

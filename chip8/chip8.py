@@ -1,4 +1,4 @@
-from stack import Stack
+from .stack import Stack
 from binascii import hexlify
 from random import randint, seed
 

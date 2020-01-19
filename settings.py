@@ -1,4 +1,4 @@
-import ConfigParser
+import configparser
 
 
 class Settings:
@@ -9,11 +9,11 @@ class Settings:
     def __init__(self, filename):
         '''Create a new Settings object with a specific file name.'''
         # Exceptions
-        self.__settingException = Exception('Cannot find specified setting' +
-                                            ' data!')
+        self.__settingException = Exception(
+            'Cannot find specified setting data!')
         # Settings variables
         self.__filename = filename
-        self.__config = ConfigParser.ConfigParser()
+        self.__config = configparser.ConfigParser()
         # Load settings from existing file (if one exists)
         self.__isEmpty = len(self.__config.read(self.__filename)) == 0
 
@@ -41,7 +41,7 @@ class Settings:
         '''Change an existing setting with a specified category and setting key
         to the value specified. Save the new settings data to a file.'''
         try:
-            self.__config.set(category, key, value)
+            self.__config.set(category, key, str(value))
             self.__saveAllSettings()
         except KeyError:
             raise self.__settingException

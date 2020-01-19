@@ -1,17 +1,18 @@
 import sys
 import pickle
-from PyQt4 import QtGui, QtCore
-from chip8 import Chip8
 from settings import Settings
+from chip8.chip8 import Chip8
 from gridframe import GridFrame
 from guiwindow import GUIWindow
+from PyQt5 import QtGui, QtCore, QtWidgets, QtMultimedia
 
 
-class InterpreterApp(QtGui.QApplication):
-    '''InterpreterApp extends the QtGui.QApplication class. This class creates
-    the GUI for the CHIP-8 interpreter system and provides functions for all
-    of the application's events. It uses GridFrame and GUIWindow  to create the
-    window, menu and status bars and the drawing grid frame required.'''
+class InterpreterApp(QtWidgets.QApplication):
+    '''InterpreterApp extends the QtWidgets.QApplication class. This class
+    creates the GUI for the CHIP-8 interpreter system and provides functions
+    for all of the application's events. It uses GridFrame and GUIWindow to
+    create the window, menu and status bars and the drawing grid frame
+    required.'''
 
     def __init__(self, args):
         '''Create a new InterpreterApp with arguments specified by args.'''
@@ -23,7 +24,7 @@ class InterpreterApp(QtGui.QApplication):
         self.__WHITE = (255, 255, 255)
         self.__BLACK = (0, 0, 0)
         self.__WINTITLE = 'Python CHIP-8 Interpreter'
-        self.__ICON = 'Resources/icon.png'
+        self.__ICON = 'assets/icon.svg'
         self.__defaultStatus = 'Please load a ROM file...'
         self.__pausedStatus = 'PAUSED'
         self.__runStatus = 'Running...'
@@ -36,10 +37,16 @@ class InterpreterApp(QtGui.QApplication):
         # Configure Settings
         self.__settings = Settings('settings.ini')
         # Configure the GUIWindow
-        self.__window = GUIWindow(self.__WINTITLE, self.__WIDTH, self.__HEIGHT,
+        self.__window = GUIWindow(self.__WINTITLE,
+                                  self.__WIDTH,
+                                  self.__HEIGHT,
                                   self.__ICON)
         # Configure the GridFrame
-        self.__gridFrame = GridFrame(self.__window, 64, 32, 10, self.__BLACK,
+        self.__gridFrame = GridFrame(self.__window,
+                                     64,
+                                     32,
+                                     10,
+                                     self.__BLACK,
                                      self.__WHITE)
         self.__window.setCentralWidget(self.__gridFrame)
         # Setup remaining GUI elements
@@ -98,25 +105,31 @@ class InterpreterApp(QtGui.QApplication):
         self.__window.addMenuItem('File', 'Quit', self.__window.close)
         # Setup Option menu items
         self.__window.addMenuItem('Options', 'Reset', self.__eventReset)
-        self.__window.addCheckableMenuItem('Options', 'Pause', False,
+        self.__window.addCheckableMenuItem('Options',
+                                           'Pause',
+                                           False,
                                            self.__eventPauseResume)
         self.__window.addMenuSeperator('Options')
-        self.__window.addMenuItem('Options', 'Save State',
+        self.__window.addMenuItem('Options',
+                                  'Save State',
                                   self.__eventSaveState)
-        self.__window.addMenuItem('Options', 'Load State',
+        self.__window.addMenuItem('Options',
+                                  'Load State',
                                   self.__eventLoadState)
         # Setup Settings menu items
-        self.__window.addMenuItem('Settings', 'Pixel Colour',
+        self.__window.addMenuItem('Settings',
+                                  'Pixel Colour',
                                   self.__eventChangePxColour)
-        self.__window.addMenuItem('Settings', 'Background Colour',
+        self.__window.addMenuItem('Settings',
+                                  'Background Colour',
                                   self.__eventChangeBgColour)
         # Setup Help menu items
         self.__window.addMenuItem('Help', 'About', self.__eventAbout)
 
     def __setupKeyBindings(self):
-        '''Configure the key bindings for the CHIP-8 controller using the
-        keys, 1, 2, 3, 4, q, w, e, r, a, s, d, f, z, x, c and v in order
-        corresponding to the rows of the original CHIP-8 input controller.'''
+        '''Configure the key bindings for the CHIP-8 controller using specific
+        keys in order corresponding to the rows of the original CHIP-8 input
+        controller.'''
         self.__keyBindings[QtCore.Qt.Key_1] = [
             lambda: self.__chip8.setKeyState(1, 1),
             lambda: self.__chip8.setKeyState(1, 0)]
@@ -169,10 +182,11 @@ class InterpreterApp(QtGui.QApplication):
 
     def __showException(self, exception):
         '''Show a popup message box with the exception that occured.'''
-        message = 'The application has crashed!\n\nERROR: ' + \
-            exception.split(':')[0]
-        QtGui.QMessageBox.critical(self.__window, 'Error', message,
-                                   buttons=QtGui.QMessageBox.Ok)
+        message = "An unexpected error occured:\n\n {}".format(str(exception))
+        QtWidgets.QMessageBox.critical(self.__window,
+                                       'Error',
+                                       message,
+                                       buttons=QtWidgets.QMessageBox.Ok)
 
     def __emulate(self):
         '''Emulate the CHIP-8 system using a timer that executes some number
@@ -184,28 +198,28 @@ class InterpreterApp(QtGui.QApplication):
                 self.__chip8.emulateCycle()
                 self.__handleSound(self.__chip8.getSoundTimer())
                 self.__gridFrame.updatePixels(self.__chip8.getGFX())
-        except:
+        except (Exception) as error:
             # Exception caught, display message and terminate
             self.__isRunning = False
-            self.__showException(str(sys.exc_info()[1]))
+            self.__showException(error)
             self.__window.close()
         finally:
-            QtCore.QTimer.singleShot(1 / self.__FPS, self.__emulate)
+            QtCore.QTimer.singleShot(1, self.__emulate)
 
     def __handleSound(self, soundTimer):
         '''Play a beep sound if the value of the soundTimer is non-zero.'''
         if soundTimer:
-            QtGui.QSound.play('Resources/beep.wav')
+            QtMultimedia.QSound.play('assets/beep.wav')
 
     def __selectColour(self, defColour):
         '''Open a colour selection dialog and return a new QColor if a new
         colour was selected.'''
         # Pause interpreter while dialog is shown
         self.__pauseEmulator()
-        color = QtGui.QColorDialog.getColor(QtGui.QColor(defColour[0],
-                                                         defColour[1],
-                                                         defColour[2]),
-                                            self.__window)
+        color = QtWidgets.QColorDialog.getColor(QtGui.QColor(defColour[0],
+                                                             defColour[1],
+                                                             defColour[2]),
+                                                self.__window)
         # Resume interpreter when dialog is closed
         if not self.__pauseLock:
             self.__pauseEmulator(False)
@@ -233,44 +247,45 @@ class InterpreterApp(QtGui.QApplication):
         if self.__isRunning:
             # Pause interpreter while dialog is shown
             self.__pauseEmulator()
-            filename = QtGui.QFileDialog.getSaveFileName(self.__window,
-                                                         'Save State', '',
-                                                         'Saved Data (*.sav)',
-                                                         options=QtGui.
-                                                         QFileDialog.
-                                                         DontUseNativeDialog)
-            # Add the .sav extension to the filename if it doesn't exist
-            if not filename.endswith('.sav'):
-                filename += '.sav'
+            fname, _ = QtWidgets.QFileDialog.getSaveFileName(
+                self.__window,
+                'Save State', '',
+                'Saved Data (*.sav)',
+                options=QtWidgets.QFileDialog.DontUseNativeDialog)
+            # Add the .sav extension to the fname if it doesn't exist
+            if not fname.endswith('.sav'):
+                fname += '.sav'
             # Resume interpreter when dialog is closed
             if not self.__pauseLock:
                 self.__pauseEmulator(False)
             # Save the state of the CHIP-8 CPU to a file
-            if filename:
-                pickle.dump(self.__chip8.getState(), open(filename, 'wb'))
+            if fname:
+                pickle.dump(self.__chip8.getState(), open(fname, 'wb'))
         else:
             # Display error message
-            QtGui.QMessageBox.information(self.__window, 'Information',
-                                          'Please load a ROM first before ' +
-                                          'saving its state.',
-                                          buttons=QtGui.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self.__window,
+                                              'Information',
+                                              'Please load a ROM first ' +
+                                              'before saving its state.',
+                                              buttons=QtWidgets.QMessageBox.Ok)
 
     def __eventLoadState(self):
         '''Display an open file dialog and load the state of a previously saved
         state of the CHIP-8 system from the specified file.'''
         # Pause interpreter while dialog is shown
         self.__pauseEmulator()
-        filename = QtGui.QFileDialog.getOpenFileName(self.__window,
-                                                     'Load State', '',
-                                                     'Saved Data (*.sav)',
-                                                     options=QtGui.QFileDialog.
-                                                     DontUseNativeDialog)
+        fname, _ = QtWidgets.QFileDialog.getOpenFileName(self.__window,
+                                                         'Load State', '',
+                                                         'Saved Data (*.sav)',
+                                                         options=QtWidgets.
+                                                         QFileDialog.
+                                                         DontUseNativeDialog)
         # Resume interpreter when dialog is closed
         if not self.__pauseLock:
             self.__pauseEmulator(False)
         # Load the state of the CHIP-8 CPU from a file
-        if filename:
-            self.__chip8.setState(pickle.load(open(filename, 'rb')))
+        if fname:
+            self.__chip8.setState(pickle.load(open(fname, 'rb')))
             self.__window.setStatusBar(self.__runStatus)
             self.__isRunning = True
 
@@ -323,11 +338,13 @@ class InterpreterApp(QtGui.QApplication):
         used to create this application and the name of the developer.'''
         # Pause interpreter while dialog is shown
         self.__pauseEmulator()
-        message = 'Python CHIP-8 CPU Interpreter\nPython 3 and PyQt 4\n\n' + \
-            'Developed by Salinder Sidhu'
+        message = 'Python CHIP-8 CPU Interpreter\n\nPython 3, PyQt 5\n' + \
+            '\nCreated by Salinder Sidhu'
         # Render the message box
-        QtGui.QMessageBox.information(self.__window, 'About', message,
-                                      buttons=QtGui.QMessageBox.Ok)
+        QtWidgets.QMessageBox.information(self.__window,
+                                          'About',
+                                          message,
+                                          buttons=QtWidgets.QMessageBox.Ok)
         # Resume interpreter when dialog is closed
         if not self.__pauseLock:
             self.__pauseEmulator(False)
@@ -337,19 +354,27 @@ class InterpreterApp(QtGui.QApplication):
         into the CHIP-8 system.'''
         # Pause interpreter while dialog is shown
         self.__pauseEmulator()
-        filename = QtGui.QFileDialog.getOpenFileName(self.__window,
-                                                     'Open File', '',
-                                                     'CHIP8 ROM (*.c8)',
-                                                     options=QtGui.QFileDialog.
-                                                     DontUseNativeDialog)
+        fname, _ = QtWidgets.QFileDialog.getOpenFileName(self.__window,
+                                                         'Open File', '',
+                                                         'All Files (*)',
+                                                         options=QtWidgets.
+                                                         QFileDialog.
+                                                         DontUseNativeDialog)
         # Resume interpreter when dialog is closed
         if not self.__pauseLock:
             self.__pauseEmulator(False)
-        # Load the CHIP-8 ROM if the filename exists
-        if filename:
-            self.__chip8.loadROM(filename)
-            self.__window.setStatusBar(self.__runStatus)
-            self.__isRunning = True
+        # Load the CHIP-8 ROM if the fname exists
+        try:
+            if fname:
+                self.__chip8.loadROM(fname)
+                self.__window.setStatusBar(self.__runStatus)
+                self.__isRunning = True
+        except (Exception) as error:
+            # Exception caught, display message and terminate
+            self.__isRunning = False
+            self.__showException(error)
+            self.__window.close()
+
 
 if __name__ == '__main__':
     # Pass command line arguments into application and launch it

@@ -1,13 +1,19 @@
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 
-class GridFrame(QtGui.QFrame):
-    '''GridFrame extends the QtGui.QFrame class. It is used to draw a custom
-    grid of pixels to the screen. The pixels are specified in a 2D list where
-    the active pixels are denoted by 1 and drawn in a specific colour while
-    pixels denoted by 0 are drawn as the background with another colour.'''
+class GridFrame(QtWidgets.QFrame):
+    '''GridFrame extends the QtWidgets.QFrame class. It is used to draw a
+    custom grid of pixels to the screen. The pixels are specified in a 2D list
+    where the active pixels are denoted by 1 and drawn in a specific colour
+    while pixels denoted by 0 are drawn as the background with another
+    colour.'''
 
-    def __init__(self, parentWindow, width, height, pxSize, defaultbgColour,
+    def __init__(self,
+                 parentWindow,
+                 width,
+                 height,
+                 pxSize,
+                 defaultbgColour,
                  defaultpxColour):
         '''Create a new GridFrame with a specific width, height, pixel size and
         default colours used to draw the pixels and background.'''
@@ -70,5 +76,7 @@ class GridFrame(QtGui.QFrame):
                     color = QtGui.QColor(self.__bgColour[0],
                                          self.__bgColour[1],
                                          self.__bgColour[2])
-                painter.fillRect(x * self.__pxSize, y * self.__pxSize,
-                                 self.__pxSize, self.__pxSize, color)
+                painter.fillRect(x * self.__pxSize,
+                                 y * self.__pxSize,
+                                 self.__pxSize,
+                                 self.__pxSize, color)

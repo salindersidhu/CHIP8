@@ -119,6 +119,10 @@ The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interprete
 
 CHIP-8 welcomes contributions from anyone and everyone. Please see our [contributing guide](/CONTRIBUTING.md) for more info.
 
+# Codebase
+
+> Information describing the software architecture and how to maintain it while adding additional functionality.
+
 ## Structure
 
     .

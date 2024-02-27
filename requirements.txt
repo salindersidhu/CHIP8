@@ -11,7 +11,8 @@ pexpect==4.7.0
 ptyprocess==0.6.0
 pycodestyle==2.5.0
 pylint==2.4.4
-PyQt5==5.14.1
-PyQt5-sip==12.7.0
+PyQt5==5.15.10
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.13.0
 six==1.14.0
 wrapt==1.11.2

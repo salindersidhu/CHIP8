@@ -69,7 +69,7 @@ class GUIWindow(QtWidgets.QMainWindow):
         res = QtWidgets.QDesktopWidget().screenGeometry()
         move_width = (res.width() / 2) - (self.frameSize().width() / 2)
         move_height = (res.height() / 2) - (self.frameSize().height() / 2)
-        self.move(move_width, move_height)
+        self.move(int(move_width), int(move_height))
 
     def updateMouseEvents(self, moveEvents, clickEvents, releaseEvents):
         '''Update the mouse event lists for movement, clicking and releasing as

@@ -1,6 +1,6 @@
 # Python CHIP-8 Interpreter
 
-[![Contributors](https://img.shields.io/github/contributors/salindersidhu/CHIP8?style=for-the-badge)](https://github.com/salindersidhu/CHIP8/graphs/contributors) [![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fsalindersidhu%2FCHIP8&countColor=%23263759)](https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2Fsalindersidhu%2FCHIP8) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=for-the-badge)](/LICENSE)
+[![Contributors](https://img.shields.io/github/contributors/salindersidhu/CHIP8?style=for-the-badge)](https://github.com/salindersidhu/CHIP8/graphs/contributors) [![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fsalindersidhu%2FCHIP8&countColor=%23263759)](https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2Fsalindersidhu%2FCHIP8) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=for-the-badge)](/LICENSE.md)
 
 ## Overview
 

@@ -1,6 +1,6 @@
 # Python CHIP-8 Interpreter
 
-[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=for-the-badge)](/LICENSE)
+[![Contributors](https://img.shields.io/github/contributors/salindersidhu/CHIP8?style=for-the-badge)](https://github.com/salindersidhu/CHIP8/graphs/contributors) [![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fsalindersidhu%2FCHIP8&countColor=%23263759)](https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2Fsalindersidhu%2FCHIP8) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=for-the-badge)](/LICENSE)
 
 ## Overview
 
@@ -9,7 +9,7 @@ For more specific information about the CHIP-8 system, please refer to the follo
 
 <p float="left">
     <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" height="150" width="150">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Qt_logo_2016.svg/640px-Qt_logo_2016.svg.png" height="150" width="150">
+    <img src="https://pic4.zhimg.com/v2-f7c3d79d423db49691daaf3b78e3fb07_ipico.jpg" height="150" width="150">
 </p>
 
 ## Features

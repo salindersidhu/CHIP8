@@ -1,58 +1,39 @@
 # Python CHIP-8 Interpreter
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](/LICENSE.md)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=for-the-badge)](/LICENSE)
 
-# Table of Contents
-
-- [Overview](#overview)
-  - [Features](#features)
-  - [Supported Platforms](#supported-platforms)
-  - [ROMs](#roms)
-- [Development](#development)
-  - [Prerequisites](#prerequisites)
-  - [Setup](#setup)
-  - [Running](#running)
-  - [Controls](#controls)
-  - [Contributing](#contributing)
-- [Codebase](#codebase)
-  - [Structure](#structure)
-
-## Overview:
+## Overview
 
 A Python based GUI implementation of the CHIP-8 system. A project I developed with the intention of gaining knowledge about emulators and cross platform GUI libraries.
-For more specific information about the CHIP-8 system, please refer to the following technical reference article on [CHIP-8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) and the [WIKI](https://en.wikipedia.org/wiki/CHIP-8).
+For more specific information about the CHIP-8 system, please refer to the following technical reference article on [CHIP-8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) and the [WIKI](https://en.wikipedia.org/wiki/CHIP-8). Built using Python and other open source technologies.
 
-<p align="center">
-	<img src="https://user-images.githubusercontent.com/12175684/72684765-58b37600-3ab1-11ea-9b5c-9a9ea3b9d52c.gif" alt="screen capture"/>
+<p float="left">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" height="150" width="150">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Qt_logo_2016.svg/640px-Qt_logo_2016.svg.png" height="150" width="150">
 </p>
 
-## Features:
+## Features
+
+<p float="center">
+  <img src="https://user-images.githubusercontent.com/12175684/72684765-58b37600-3ab1-11ea-9b5c-9a9ea3b9d52c.gif" alt="screen capture"/>
+</p>
 
 - Implementation of all 35 CHIP-8 opcodes
-- Custom pixel and background colour rendering
-- Saving and loading of emulation state
+- Custom pixel and background colours
+- Saving and loading emulation state
 - Sound effects
 
-## Supported Platforms:
+## Prerequisite Software
 
-- Windows 10, Mac OS X and Linux based distributions
+| Software       | Version   |
+| :------------- | :-------- |
+| Python         | 3.11+     |
 
-## ROMs:
+### ROMs
 
 ROMs for the CHIP-8 system can be obtained online for free at [Internet Archive](https://archive.org/details/Chip-8RomsThatAreInThePublicDomain).
 
-# Development
-
-> Information describing how to install and configure all the required tools to begin development.
-
-## Prerequisites:
-
-Ensure that you have the following installed and configured any environment variables.
-
-- **Python**
-  - Version 3.7.5+
-
-## Setup:
+## Getting Started
 
 You will need to setup a python virtual environment and install the project's dependencies.
 
@@ -93,7 +74,7 @@ pip install -r requirements.txt
 
 If you have recently pulled changes from a remote branch, you should re-run the above command to obtain any new dependencies that may have been added to the project.
 
-## Running:
+## Running
 
 1. Enable your virtual environment with the following command:
 
@@ -111,7 +92,7 @@ source venv/bin/activate
 python interpreterapp.py
 ```
 
-## Controls:
+### Controls
 
 The CHIP-8 system uses a `hexadecimal keyboard` that has 16 keys from 0 to 9 and A to F. Keys `2`, `4`, `6` and `8` are typically used for directional input.
 
@@ -123,13 +104,9 @@ The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interprete
 
 ## Contributing
 
-CHIP-8 welcomes contributions from anyone and everyone. Please see our [contributing guide](/CONTRIBUTING.md) for more info.
+Please see our [Contributing Guide](/CONTRIBUTING.md) for more info.
 
-# Codebase
-
-> Information describing the software architecture and how to maintain it while adding additional functionality.
-
-## Structure
+## Project Structure
 
     .
     ├── ...

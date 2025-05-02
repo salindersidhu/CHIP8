@@ -89,7 +89,7 @@ source venv/bin/activate
 2. Launch the CHIP-8 interpreter app with the following command:
 
 ```bash
-python interpreterapp.py
+python app.py
 ```
 
 ### Controls
@@ -109,17 +109,19 @@ Please see our [Contributing Guide](/CONTRIBUTING.md) for more info.
 ## Project Structure
 
     .
-    ├── ...
-    ├── assets                      # Assets
-    │    ├── icon.svg               # CHIP-8 interpreter window icon
-    │    └── ...
-    ├── chip8                       # CHIP-8 Python package
-    │   ├── __init__.py             # Package init file
-    │   ├── chip8.py                # CHIP-8 CPU logic
-    │   ├── stack.py                # Stack data structure
-    │   └── ...
-    ├── gridframe.py                # PyQt5 frame for rending the CHIP-8 display
-    ├── guiwindow.py                # PyQt5 GUI window setup and config
-    ├── interpreterapp.py           # Main application
-    ├── requirements.txt            # Dependencies to install with pip
-    └── ...
+    ├── app.py                    # Alternate entry point
+    ├── assets/                   # Assets (fonts, ROMs, etc)
+    ├── chip8/                    # CHIP-8 Python package
+    │   ├── __init__.py           # Package init file
+    │   ├── chip8.py              # CHIP-8 CPU logic
+    │   ├── stack.py              # Stack data structure
+    │   └── ...                   # Other CHIP-8 core files
+    ├── frame.py                  # Frame rendering logic
+    ├── LICENSE.md                # License file
+    ├── README.md                 # Project documentation
+    ├── requirements.txt          # Dependencies to install with pip
+    ├── SECURITY.md               # Security policy
+    ├── settings.ini              # Application settings
+    ├── settings.py               # Settings logic
+    ├── window.py                 # Window management
+    └── __pycache__/              # Python bytecode cache

@@ -2,8 +2,8 @@ import sys
 import pickle
 from settings import Settings
 from chip8.chip8 import Chip8
-from gridframe import GridFrame
-from guiwindow import GUIWindow
+from frame import Frame
+from window import Window
 from colormap import rgb2hex, hex2rgb
 from PyQt5 import QtGui, QtCore, QtWidgets, QtMultimedia
 
@@ -11,7 +11,7 @@ from PyQt5 import QtGui, QtCore, QtWidgets, QtMultimedia
 class InterpreterApp(QtWidgets.QApplication):
     '''InterpreterApp extends the QtWidgets.QApplication class. This class
     creates the GUI for the CHIP-8 interpreter system and provides functions
-    for all of the application's events. It uses GridFrame and GUIWindow to
+    for all of the application's events. It uses Frame and Window to
     create the window, menu and status bars and the drawing grid frame
     required.'''
 
@@ -36,18 +36,18 @@ class InterpreterApp(QtWidgets.QApplication):
         self.__timer = QtCore.QBasicTimer()
         # Configure Settings
         self.__settings = Settings('settings.ini')
-        # Configure the GUIWindow
-        self.__window = GUIWindow(self.__WINTITLE,
-                                  self.__WIDTH,
-                                  self.__HEIGHT,
-                                  self.__ICON)
-        # Configure the GridFrame
-        self.__gridFrame = GridFrame(self.__window,
-                                     64,
-                                     32,
-                                     10,
-                                     self.__BLACK,
-                                     self.__WHITE)
+        # Configure the Window
+        self.__window = Window(self.__WINTITLE,
+                               self.__WIDTH,
+                               self.__HEIGHT,
+                               self.__ICON)
+        # Configure the Frame
+        self.__gridFrame = Frame(self.__window,
+                                 64,
+                                 32,
+                                 10,
+                                 self.__BLACK,
+                                 self.__WHITE)
         self.__window.setCentralWidget(self.__gridFrame)
         # Setup remaining GUI elements
         self.__loadSettings()
@@ -60,7 +60,7 @@ class InterpreterApp(QtWidgets.QApplication):
         self.__emulate()
 
     def __loadSettings(self):
-        '''Load settings for the GridFrame's pixel colour and background
+        '''Load settings for the Frame's pixel colour and background
         colour.'''
         # Save default settings to file if they no settings data exists
         if self.__settings.isEmpty():
@@ -281,7 +281,7 @@ class InterpreterApp(QtWidgets.QApplication):
             self.__isRunning = True
 
     def __eventChangeBgColour(self):
-        '''Change the current value of the GridFrame's pixel colour and save
+        '''Change the current value of the Frame's pixel colour and save
         the updated setting.'''
         newCol = self.__selectColour(self.__gridFrame.getBackgroundColour())
         # Verify that the new background colour is valid
@@ -293,7 +293,7 @@ class InterpreterApp(QtWidgets.QApplication):
                 'COLOURS', 'background', rgb2hex(*newBgColour))
 
     def __eventChangePxColour(self):
-        '''Change the current value of the GridFrame's background colour and
+        '''Change the current value of the Frame's background colour and
         save the updated setting.'''
         newCol = self.__selectColour(self.__gridFrame.getPixelColour())
         # Verify that the new pixel colour is valid
@@ -313,7 +313,7 @@ class InterpreterApp(QtWidgets.QApplication):
 
     def __eventReset(self):
         '''Reset the current state of the emulator by clearing all the pixels
-        in GridFrame and restoring the CHIP-8 system to it's initial state.'''
+        in Frame and restoring the CHIP-8 system to it's initial state.'''
         if self.__isRunning:
             self.__gridFrame.clearPixels()
             self.__chip8.reset()

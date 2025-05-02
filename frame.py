@@ -1,8 +1,8 @@
 from PyQt5 import QtGui, QtCore, QtWidgets
 
 
-class GridFrame(QtWidgets.QFrame):
-    '''GridFrame extends the QtWidgets.QFrame class. It is used to draw a
+class Frame(QtWidgets.QFrame):
+    '''Frame extends the QtWidgets.QFrame class. It is used to draw a
     custom grid of pixels to the screen. The pixels are specified in a 2D list
     where the active pixels are denoted by 1 and drawn in a specific colour
     while pixels denoted by 0 are drawn as the background with another
@@ -15,9 +15,9 @@ class GridFrame(QtWidgets.QFrame):
                  pxSize,
                  defaultbgColour,
                  defaultpxColour):
-        '''Create a new GridFrame with a specific width, height, pixel size and
+        '''Create a new Frame with a specific width, height, pixel size and
         default colours used to draw the pixels and background.'''
-        super(GridFrame, self).__init__(parentWindow)
+        super(Frame, self).__init__(parentWindow)
         # Grid frame variables
         self.__grid = [[0 for _ in range(height)] for _ in range(width)]
         self.__pxSize = pxSize
@@ -26,7 +26,7 @@ class GridFrame(QtWidgets.QFrame):
         # Default pixel and background colours
         self.__pxColour = defaultpxColour
         self.__bgColour = defaultbgColour
-        # Set strong policy for focusing keyboard events to GridFrame
+        # Set strong policy for focusing keyboard events to Frame
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
 
     def updatePixels(self, grid):
@@ -63,9 +63,9 @@ class GridFrame(QtWidgets.QFrame):
         drawn using pixel colour and the background is drawn wherever the pixel
         value is 0 using background colour.'''
         painter = QtGui.QPainter(self)  # Used to draw on the frame
-        # Clear all drawings on the GridFrame
+        # Clear all drawings on the Frame
         painter.eraseRect(0, 0, self.width(), self.height())
-        # Draw the pixels on the GridFrame
+        # Draw the pixels on the Frame
         for y in range(self.__gHeight):
             for x in range(self.__gWidth):
                 if self.__grid[x][y]:

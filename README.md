@@ -102,6 +102,16 @@ The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interprete
 	<img src='https://user-images.githubusercontent.com/12175684/40276007-26e1efd6-5bcd-11e8-8e4b-b615659797ee.png' alt='Keyboard'/>
 </p>
 
+## Running Tests
+
+To run the CHIP-8 test suite, use the following command from the project root:
+
+```bash
+python -m chip8.tests.main
+```
+
+This will execute all available unit tests for the CHIP-8 implementation.
+
 ## Contributing
 
 Please see our [Contributing Guide](/CONTRIBUTING.md) for more info.

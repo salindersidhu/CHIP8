@@ -1,22 +1,22 @@
 from PyQt5 import QtGui, QtWidgets
 
 
-class GUIWindow(QtWidgets.QMainWindow):
-    '''GUIWindow the extends the QtWidgets.QMainWindow class. It creates a
+class Window(QtWidgets.QMainWindow):
+    '''Window extends the QtWidgets.QMainWindow class. It creates a
     basic window that contains a MenuBar and a StatusBar, both of which are
     modifiable. The window includes advanced functionality such as appearing in
     the center of the screen binding of key and mouse events.'''
 
     def __init__(self, winTitle, winWidth, winHeight, winIcon):
-        '''Create a new GUIWindow with a specific window title, width, height
+        '''Create a new Window with a specific window title, width, height
         and window icon.'''
-        super(GUIWindow, self).__init__()
+        super(Window, self).__init__()
         # Exceptions
         self.__menuExistsException = Exception(
             'The specified menu already exists!')
         self.__menuNotFoundException = Exception(
             'The specified menu was not found!')
-        # GUIWindow variables
+        # Window variables
         self.__menubar = self.menuBar()         # Menu Bar
         self.__menuDict = {}                    # Map of Menus for Menubar
         self.__statusLabel = QtWidgets.QLabel()  # New Status label

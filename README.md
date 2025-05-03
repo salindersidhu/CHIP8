@@ -89,7 +89,7 @@ source venv/bin/activate
 2. Launch the CHIP-8 interpreter app with the following command:
 
 ```bash
-python interpreterapp.py
+python app.py
 ```
 
 ### Controls
@@ -102,6 +102,16 @@ The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interprete
 	<img src='https://user-images.githubusercontent.com/12175684/40276007-26e1efd6-5bcd-11e8-8e4b-b615659797ee.png' alt='Keyboard'/>
 </p>
 
+## Running Tests
+
+To run the CHIP-8 test suite, use the following command from the project root:
+
+```bash
+python -m chip8.tests.main
+```
+
+This will execute all available unit tests for the CHIP-8 implementation.
+
 ## Contributing
 
 Please see our [Contributing Guide](/CONTRIBUTING.md) for more info.
@@ -109,17 +119,19 @@ Please see our [Contributing Guide](/CONTRIBUTING.md) for more info.
 ## Project Structure
 
     .
-    ├── ...
-    ├── assets                      # Assets
-    │    ├── icon.svg               # CHIP-8 interpreter window icon
-    │    └── ...
-    ├── chip8                       # CHIP-8 Python package
-    │   ├── __init__.py             # Package init file
-    │   ├── chip8.py                # CHIP-8 CPU logic
-    │   ├── stack.py                # Stack data structure
-    │   └── ...
-    ├── gridframe.py                # PyQt5 frame for rending the CHIP-8 display
-    ├── guiwindow.py                # PyQt5 GUI window setup and config
-    ├── interpreterapp.py           # Main application
-    ├── requirements.txt            # Dependencies to install with pip
-    └── ...
+    ├── app.py                    # Alternate entry point
+    ├── assets/                   # Assets (fonts, ROMs, etc)
+    ├── chip8/                    # CHIP-8 Python package
+    │   ├── __init__.py           # Package init file
+    │   ├── chip8.py              # CHIP-8 CPU logic
+    │   ├── stack.py              # Stack data structure
+    │   └── ...                   # Other CHIP-8 core files
+    ├── frame.py                  # Frame rendering logic
+    ├── LICENSE.md                # License file
+    ├── README.md                 # Project documentation
+    ├── requirements.txt          # Dependencies to install with pip
+    ├── SECURITY.md               # Security policy
+    ├── settings.ini              # Application settings
+    ├── settings.py               # Settings logic
+    ├── window.py                 # Window management
+    └── __pycache__/              # Python bytecode cache

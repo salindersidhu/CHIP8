@@ -47,7 +47,7 @@ class Chip8(object):
         self.__tableENNN = {'9e': self.__instEX9E, 'a1': self.__instEXA1}
         self.__tableFNNN = {'07': self.__instFX07, '0a': self.__instFX0A,
                             '15': self.__instFX15, '18': self.__instFX18,
-                            '1e': self.__instFX18, '1e': self.__instFX1E,
+                            '1e': self.__instFX1E,
                             '29': self.__instFX29, '33': self.__instFX33,
                             '55': self.__instFX55, '65': self.__instFX65}
 
@@ -232,66 +232,42 @@ class Chip8(object):
         self.__pc += 2
 
     def __inst8XY4(self):
-        '''8XY4: Add VY to VX. VF is set to 1 when there's a carry, and to 0
-        when there isn't.'''
-        self.__V[int(self.__opCode[1], 16)] += \
-            self.__V[int(self.__opCode[2], 16)]
-        if self.__V[int(self.__opCode[1], 16)] > 255:
-            self.__V[15] = 1
-            self.__V[int(self.__opCode[1], 16)] &= 255  # Take lowest 8 bits
-        else:
-            self.__V[15] = 0
+        '''8XY4: Add VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.'''
+        x = int(self.__opCode[1], 16)
+        y = int(self.__opCode[2], 16)
+        result = self.__V[x] + self.__V[y]
+        self.__V[15] = 1 if result > 0xFF else 0
+        self.__V[x] = result & 0xFF
         self.__pc += 2
 
     def __inst8XY5(self):
-        '''8XY5: Subtract VY from VX. VF is set to 0 when there's a borrow, and
-        1 when there isn't.'''
-        if self.__V[int(self.__opCode[1], 16)] > \
-           self.__V[int(self.__opCode[2], 16)]:
-            self.__V[15] = 1
-        else:
-            self.__V[15] = 0  # There is a borrow
-        self.__V[int(self.__opCode[1], 16)] -= \
-            self.__V[int(self.__opCode[2], 16)]
+        '''8XY5: Subtract VY from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.'''
+        x = int(self.__opCode[1], 16)
+        y = int(self.__opCode[2], 16)
+        self.__V[15] = 1 if self.__V[x] >= self.__V[y] else 0
+        self.__V[x] = (self.__V[x] - self.__V[y]) & 0xFF
         self.__pc += 2
 
     def __inst8XY6(self):
-        '''8XY6: Shift VX right by 1. VF is set to the value of the least
-        significant bit of VX before the shift.'''
-        # Make binary string from integer
-        binStr = bin(self.__V[int(self.__opCode[1], 16)])
-        # Check for least significant bit
-        if binStr[len(binStr)-1] == '1':
-            self.__V[15] = 1
-        elif binStr[len(binStr)-1] == '0':
-            self.__V[15] = 0
-        # Divide Vx by 2 by shifting right by 1
-        self.__V[int(self.__opCode[1], 16)] >>= 1
+        '''8XY6: Shift VX right by 1. VF is set to the value of the least significant bit of VX before the shift.'''
+        x = int(self.__opCode[1], 16)
+        self.__V[15] = self.__V[x] & 0x1
+        self.__V[x] = (self.__V[x] >> 1) & 0xFF
         self.__pc += 2
 
     def __inst8XY7(self):
-        '''8XY7: Set VX to VY minus VX. VF is set to 0 when there's a borrow,
-        and 1 when there isn't.'''
-        if self.__V[int(self.__opCode[2], 16)] > \
-           self.__V[int(self.__opCode[1], 16)]:
-            self.__V[15] = 1
-        else:
-            self.__V[15] = 0
-        self.__V[int(self.__opCode[1], 16)] = \
-            self.__V[int(self.__opCode[2], 16)] - \
-            self.__V[int(self.__opCode[1], 16)]
+        '''8XY7: Set VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't.'''
+        x = int(self.__opCode[1], 16)
+        y = int(self.__opCode[2], 16)
+        self.__V[15] = 1 if self.__V[y] >= self.__V[x] else 0
+        self.__V[x] = (self.__V[y] - self.__V[x]) & 0xFF
         self.__pc += 2
 
     def __inst8XYE(self):
-        '''8XYE: Shift VX left by one. VF is set to the value of the most
-        significant bit of VX before the shift.'''
-        # Check for least significant bit
-        if int(self.__V[int(self.__opCode[1], 16)] / 255) > 1:
-            self.__V[15] = 1
-        else:
-            self.__V[15] = 0
-        self.__V[int(self.__opCode[1], 16)] = \
-            (self.__V[int(self.__opCode[1], 16)] << 1) & 255
+        '''8XYE: Shift VX left by one. VF is set to the value of the most significant bit of VX before the shift.'''
+        x = int(self.__opCode[1], 16)
+        self.__V[15] = (self.__V[x] >> 7) & 0x1
+        self.__V[x] = (self.__V[x] << 1) & 0xFF
         self.__pc += 2
 
     def __inst9XY0(self):
@@ -319,43 +295,20 @@ class Chip8(object):
         self.__pc += 2
 
     def __instDXYN(self):
-        '''DXYN: Draw a sprite at coordinate (VX, VY) that has a width of 8
-        pixels and a height of N pixels. Each row of 8 pixels is read as
-        bit-coded starting from memory location I value doesn't change after
-        the execution of this instruction. VF is set to 1 if any screen pixels
-        are flipped from set to unset when the sprite is drawn, and to 0 if
-        that does not occur.'''
-        x = self.__V[int(self.__opCode[1], 16)]
-        y = self.__V[int(self.__opCode[2], 16)]
-        length = int(self.__opCode[3], 16)
+        '''DXYN: Draw a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels.'''
+        x = self.__V[int(self.__opCode[1], 16)] % 64
+        y = self.__V[int(self.__opCode[2], 16)] % 32
+        height = int(self.__opCode[3], 16)
         self.__V[15] = 0
-        data = []  # Hold data to be written to screen
-        # Adjust data
-        for i in range(length):
-            data.append(bin(int(self.__ram[self.__I + i], 16)))
-            data[i] = data[i].replace('0', '', 1)
-            data[i] = data[i].replace('b', '', 1)
-            # Pad the data so it's 8 chars long
-            while len(data[i]) < 8:
-                data[i] = '0' + data[i]
-        # Drawing system
-        for i in range(len(data)):
-            for j in range(8):
-                newX = x + j
-                newY = y
-                # Wrap to other side horizontally
-                while newX >= 64:
-                    newX -= 64
-                # Wrap to other side vertically
-                while newY >= 32:
-                    newY -= 32
-                # XOR drawing mode
-                pxVal = int(data[i][j])
-                if pxVal:
-                    self.__gfx[newX][newY] = pxVal ^ self.__gfx[newX][newY]
-                    if not self.__gfx[newX][newY]:
+        for row in range(height):
+            sprite = int(self.__ram[self.__I + row], 16)
+            for col in range(8):
+                if (sprite & (0x80 >> col)) != 0:
+                    px = (x + col) % 64
+                    py = (y + row) % 32
+                    if self.__gfx[px][py] == 1:
                         self.__V[15] = 1
-            y += 1  # Move down to draw the next row
+                    self.__gfx[px][py] ^= 1
         self.__pc += 2
 
     def __instEX9E(self):
@@ -380,16 +333,13 @@ class Chip8(object):
         self.__pc += 2
 
     def __instFX0A(self):
-        '''FX0A: Wait for a key press and stored the key in VX.'''
-        isKeyPressed = False
+        '''FX0A: Wait for a key press and store the key in VX.'''
         for i in range(16):
             if self.__key[i]:
                 self.__V[int(self.__opCode[1], 16)] = i
-            isKeyPressed = True
-        # If no key pressed, skip this cycle.
-        if not isKeyPressed:
-            return
-        self.__pc += 2
+                self.__pc += 2
+                return
+        # If no key pressed, do not increment PC (repeat this instruction)
 
     def __instFX15(self):
         '''FX15: Set the delay timer to VX.'''
@@ -413,25 +363,24 @@ class Chip8(object):
         self.__pc += 2
 
     def __instFX33(self):
-        '''FX33: Store the Binary-coded decimal representation of VX at the
-        addresses I, I plus 1, and I plus 2.'''
-        num = self.__V[int(self.__opCode[1], 16)]
-        self.__ram[self.__I] = hex(int(num / 100)).replace('x', '')
-        num -= 100 * int(num / 100)
-        self.__ram[self.__I + 1] = hex(int(num / 10)).replace('x', '')
-        num -= 10 * int(num / 10)
-        self.__ram[self.__I + 2] = hex(num).replace('x', '')
+        '''FX33: Store the Binary-coded decimal representation of VX at the addresses I, I+1, and I+2.'''
+        x = int(self.__opCode[1], 16)
+        value = self.__V[x]
+        self.__ram[self.__I] = '{:02x}'.format(value // 100)
+        self.__ram[self.__I + 1] = '{:02x}'.format((value // 10) % 10)
+        self.__ram[self.__I + 2] = '{:02x}'.format(value % 10)
         self.__pc += 2
 
     def __instFX55(self):
         '''FX55: Store V0 to VX in memory starting at address I.'''
-        for i in range(int(self.__opCode[1], 16) + 1):
-            self.__ram[self.__I + i] = hex(self.__V[i]).replace('x', '')
+        x = int(self.__opCode[1], 16)
+        for i in range(x + 1):
+            self.__ram[self.__I + i] = '{:02x}'.format(self.__V[i])
         self.__pc += 2
 
     def __instFX65(self):
-        '''FX65: Fill V0 to VX with values from memory starting at address
-        I.'''
-        for i in range(int(self.__opCode[1], 16) + 1):
+        '''FX65: Fill V0 to VX with values from memory starting at address I.'''
+        x = int(self.__opCode[1], 16)
+        for i in range(x + 1):
             self.__V[i] = int(self.__ram[self.__I + i], 16)
         self.__pc += 2

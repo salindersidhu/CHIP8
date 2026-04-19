@@ -7,10 +7,7 @@
 A Python based GUI implementation of the CHIP-8 system. A project I developed with the intention of gaining knowledge about emulators and cross platform GUI libraries.
 For more specific information about the CHIP-8 system, please refer to the following technical reference article on [CHIP-8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) and the [WIKI](https://en.wikipedia.org/wiki/CHIP-8). Built using Python and other open source technologies.
 
-<p float="left">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" height="150" width="150">
-    <img src="https://pic4.zhimg.com/v2-f7c3d79d423db49691daaf3b78e3fb07_ipico.jpg" height="150" width="150">
-</p>
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="150" /> <img src="https://pic4.zhimg.com/v2-f7c3d79d423db49691daaf3b78e3fb07_ipico.jpg" width="150" />
 
 ## Features
 

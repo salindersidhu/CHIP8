@@ -26,3 +26,7 @@ class Stack(object):
             return self.__stk_pointer.pop()
         except IndexError:
             raise self.__emptyStackException
+
+    def toList(self):
+        '''Return a copy of the stack as a list.'''
+        return self.__stk_pointer[:]

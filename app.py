@@ -4,9 +4,9 @@ from settings import Settings
 from chip8.chip8 import Chip8
 from frame import Frame
 from window import Window
-from colormap import rgb2hex, hex2rgb
+from utils import rgb_to_hex, hex_to_rgb
 from PyQt5 import QtGui, QtCore, QtWidgets, QtMultimedia
-
+from debug_window import DebugWindow
 
 class InterpreterApp(QtWidgets.QApplication):
     '''InterpreterApp extends the QtWidgets.QApplication class. This class
@@ -34,6 +34,11 @@ class InterpreterApp(QtWidgets.QApplication):
         self.__chip8 = Chip8()
         self.__keyBindings = {}
         self.__timer = QtCore.QBasicTimer()
+        # Debug window variables
+        self.__debugWindow = None
+        self.__debugActive = False
+        self.__debugPreviousPaused = False
+        self.__debugPreviousPauseLock = False
         # Configure Settings
         self.__settings = Settings('settings.ini')
         # Configure the Window
@@ -66,19 +71,19 @@ class InterpreterApp(QtWidgets.QApplication):
         if self.__settings.isEmpty():
             colours = {}
             # Get the default value for the pixel colour
-            colours['pixel'] = rgb2hex(*self.__gridFrame.getPixelColour())
+            colours['pixel'] = rgb_to_hex(*self.__gridFrame.getPixelColour())
             # Get the  default value for the background color
-            colours['background'] = rgb2hex(
+            colours['background'] = rgb_to_hex(
                 *self.__gridFrame.getBackgroundColour())
             # Add and save default settings
             self.__settings.addNewSetting('COLOURS', colours)
         else:
             # Load settings for pixel colour
             self.__gridFrame.changePixelColour(
-                hex2rgb(self.__settings.getSetting('COLOURS', 'pixel')))
+                hex_to_rgb(self.__settings.getSetting('COLOURS', 'pixel')))
             # Load settings for background colour
             self.__gridFrame.changeBackgroundColour(
-                hex2rgb(self.__settings.getSetting('COLOURS', 'background')))
+                hex_to_rgb(self.__settings.getSetting('COLOURS', 'background')))
 
     def __setupMenu(self):
         '''Add all the menus used in the application to GUIWindow.'''
@@ -92,6 +97,7 @@ class InterpreterApp(QtWidgets.QApplication):
         the application to GUIWindow.'''
         # Setup File menu items
         self.__window.addMenuItem('File', 'Load ROM', self.__eventLoadROM)
+        self.__window.addMenuItem('File', 'Debug', self.__eventDebug)
         self.__window.addMenuSeperator('File')
         self.__window.addMenuItem('File', 'Quit', self.__window.close)
         # Setup Option menu items
@@ -280,6 +286,10 @@ class InterpreterApp(QtWidgets.QApplication):
             self.__window.setStatusBar(self.__runStatus)
             self.__isRunning = True
 
+        if self.__debugWindow:
+            self.__pauseEmulator(True)
+            self.__debugWindow.resetControls()
+
     def __eventChangeBgColour(self):
         '''Change the current value of the Frame's pixel colour and save
         the updated setting.'''
@@ -290,7 +300,7 @@ class InterpreterApp(QtWidgets.QApplication):
             self.__gridFrame.changeBackgroundColour(newBgColour)
             # Save the new background colour to settings
             self.__settings.editSetting(
-                'COLOURS', 'background', rgb2hex(*newBgColour))
+                'COLOURS', 'background', rgb_to_hex(*newBgColour))
 
     def __eventChangePxColour(self):
         '''Change the current value of the Frame's background colour and
@@ -302,7 +312,7 @@ class InterpreterApp(QtWidgets.QApplication):
             self.__gridFrame.changePixelColour(newPxColour)
             # Save the new pixel colour to settings
             self.__settings.editSetting(
-                'COLOURS', 'pixel', rgb2hex(*newPxColour))
+                'COLOURS', 'pixel', rgb_to_hex(*newPxColour))
 
     def __eventPauseResume(self):
         '''Pause the CHIP-8 system if it is current running, otherwise resume
@@ -358,11 +368,68 @@ class InterpreterApp(QtWidgets.QApplication):
                 self.__chip8.loadROM(fname)
                 self.__window.setStatusBar(self.__runStatus)
                 self.__isRunning = True
+
+            if self.__debugWindow:
+                self.__pauseEmulator(True)
+                self.__debugWindow.resetControls()
         except (Exception) as error:
             # Exception caught, display message and terminate
             self.__isRunning = False
             self.__showException(error)
             self.__window.close()
+
+    def __eventDebug(self):
+        if self.__debugWindow:
+            self.__debugWindow.raise_()
+            self.__debugWindow.activateWindow()
+            return
+
+        self.__debugActive = True
+        self.__debugPreviousPaused = self.__isPaused
+        self.__debugPreviousPauseLock = self.__pauseLock
+
+        self.__pauseLock = True
+        self.__pauseEmulator(True)
+
+        self.__debugWindow = DebugWindow(
+            self.__window,
+            self.__chip8,
+            self.__debugStep,
+            self.__debugRun,
+            self.__debugStop,
+            self.__debugClosed
+        )
+        self.__debugWindow.show()
+
+    def __debugStep(self):
+        try:
+            if self.__isRunning and self.__debugActive:
+                self.__chip8.emulateCycle()
+                self.__handleSound(self.__chip8.getSoundTimer())
+                self.__gridFrame.updatePixels(self.__chip8.getGFX())
+        except Exception as error:
+            self.__isRunning = False
+            self.__showException(error)
+            self.__window.close()
+
+    def __debugClosed(self):
+        self.__debugWindow = None
+        self.__debugActive = False
+
+        self.__isPaused = self.__debugPreviousPaused
+        self.__pauseLock = self.__debugPreviousPauseLock
+
+        if self.__isRunning:
+            if self.__isPaused:
+                self.__window.setStatusBar(self.__pausedStatus)
+            else:
+                self.__window.setStatusBar(self.__runStatus)
+
+    def __debugRun(self):
+        self.__pauseEmulator(False)
+
+    def __debugStop(self):
+        self.__pauseEmulator(True)
 
 
 if __name__ == '__main__':

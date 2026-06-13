@@ -16,9 +16,29 @@ For more specific information about the CHIP-8 system, please refer to the follo
 </p>
 
 - Implementation of all 35 CHIP-8 opcodes
+- Built-in debugger
 - Custom pixel and background colours
 - Saving and loading emulation state
 - Sound effects
+
+### Debugger
+
+The emulator includes a built-in debugger that can be opened from **File > Debug**.
+
+The debugger provides:
+
+- Current Program Counter (PC)
+- Current Opcode (OP)
+- Index Register (I)
+- All CHIP-8 registers (V0–VF)
+- Delay and Sound timers
+- Stack inspection
+- Full 4 KB memory view
+- Highlighting of the currently executing instruction
+- Single step execution
+- Run / Stop controls for pausing and resuming execution
+
+When the debugger is open, the emulator can be paused and advanced one instruction at a time, making it easier to understand program flow, troubleshoot ROMs, and verify opcode implementations.
 
 ## Prerequisite Software
 
@@ -117,6 +137,7 @@ Please see our [Contributing Guide](/CONTRIBUTING.md) for more info.
 
     .
     ├── app.py                    # Alternate entry point
+    ├── debug_window.py           # CHIP-8 debugger
     ├── assets/                   # Assets (fonts, ROMs, etc)
     ├── chip8/                    # CHIP-8 Python package
     │   ├── __init__.py           # Package init file
@@ -130,5 +151,6 @@ Please see our [Contributing Guide](/CONTRIBUTING.md) for more info.
     ├── SECURITY.md               # Security policy
     ├── settings.ini              # Application settings
     ├── settings.py               # Settings logic
+    ├── utils.py                  # Utilities
     ├── window.py                 # Window management
     └── __pycache__/              # Python bytecode cache

@@ -121,8 +121,10 @@ class DebugWindow(QtWidgets.QDialog):
         self.__memoryTable.setHorizontalHeaderLabels(headers)
 
         self.__memoryTable.verticalHeader().setVisible(False)
-        self.__memoryTable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.__memoryTable.setSelectionMode(QtWidgets.QAbstractItemView.NoSelection)
+        self.__memoryTable.setEditTriggers(
+            QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.__memoryTable.setSelectionMode(
+            QtWidgets.QAbstractItemView.NoSelection)
         self.__memoryTable.setFont(QFont("Courier New", 9))
 
         header = self.__memoryTable.horizontalHeader()
@@ -201,7 +203,8 @@ class DebugWindow(QtWidgets.QDialog):
         self.__fields["Sound Timer"].setText(str(state["TIM"][1]))
         self.__fields["Keys"].setText(str(state["KEY"]))
 
-        stack = state["STK"].toList() if hasattr(state["STK"], "toList") else state["STK"]
+        stack = state["STK"].toList() if hasattr(
+            state["STK"], "toList") else state["STK"]
         self.__fields["Stack"].setText(str(stack))
 
         for index, value in enumerate(state["REG"]):
@@ -225,7 +228,8 @@ class DebugWindow(QtWidgets.QDialog):
 
                 if address < len(ram):
                     value = ram[address]
-                    text = f"{value:02X}" if isinstance(value, int) else str(value)
+                    text = f"{value:02X}" if isinstance(
+                        value, int) else str(value)
                 else:
                     text = ""
 

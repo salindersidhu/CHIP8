@@ -1,6 +1,7 @@
 import unittest
 from chip8.stack import Stack
 
+
 class TestStack(unittest.TestCase):
     def test_push_and_pop(self):
         stack = Stack()
@@ -31,7 +32,7 @@ class TestStack(unittest.TestCase):
         with self.assertRaises(Exception) as context:
             stack.pop()
         self.assertIn('Cannot pop from empty stack', str(context.exception))
-    
+
     def test_toList(self):
         stack = Stack()
         stack.push(1)

@@ -8,6 +8,7 @@ from utils import rgb_to_hex, hex_to_rgb
 from PyQt5 import QtGui, QtCore, QtWidgets, QtMultimedia
 from debug_window import DebugWindow
 
+
 class InterpreterApp(QtWidgets.QApplication):
     '''InterpreterApp extends the QtWidgets.QApplication class. This class
     creates the GUI for the CHIP-8 interpreter system and provides functions

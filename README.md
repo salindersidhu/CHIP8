@@ -11,9 +11,7 @@ For more specific information about the CHIP-8 system, please refer to the follo
 
 ## Features
 
-<p float="center">
-  <img src="https://user-images.githubusercontent.com/12175684/72684765-58b37600-3ab1-11ea-9b5c-9a9ea3b9d52c.gif" alt="screen capture"/>
-</p>
+<img src="emulator.gif" alt="screen capture"/>
 
 - Implementation of all 35 CHIP-8 opcodes
 - Built-in debugger
@@ -21,7 +19,9 @@ For more specific information about the CHIP-8 system, please refer to the follo
 - Saving and loading emulation state
 - Sound effects
 
-### Debugger
+## Debugger
+
+<img src="debugger.png" alt="screen capture"/>
 
 The emulator includes a built-in debugger that can be opened from **File > Debug**.
 
@@ -115,9 +115,7 @@ The CHIP-8 system uses a `hexadecimal keyboard` that has 16 keys from 0 to 9 and
 
 The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interpreter KeyBoard` used in the application.
 
-<p align='center'>
-	<img src='https://user-images.githubusercontent.com/12175684/40276007-26e1efd6-5bcd-11e8-8e4b-b615659797ee.png' alt='Keyboard'/>
-</p>
+<img src='https://user-images.githubusercontent.com/12175684/40276007-26e1efd6-5bcd-11e8-8e4b-b615659797ee.png' alt='Keyboard'/>
 
 ## Running Tests
 

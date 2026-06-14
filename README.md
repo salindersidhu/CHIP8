@@ -11,14 +11,34 @@ For more specific information about the CHIP-8 system, please refer to the follo
 
 ## Features
 
-<p float="center">
-  <img src="https://user-images.githubusercontent.com/12175684/72684765-58b37600-3ab1-11ea-9b5c-9a9ea3b9d52c.gif" alt="screen capture"/>
-</p>
+<img src="emulator.gif" alt="screen capture"/>
 
 - Implementation of all 35 CHIP-8 opcodes
+- Built-in debugger
 - Custom pixel and background colours
 - Saving and loading emulation state
 - Sound effects
+
+## Debugger
+
+<img src="debugger.png" alt="screen capture"/>
+
+The emulator includes a built-in debugger that can be opened from **File > Debug**.
+
+The debugger provides:
+
+- Current Program Counter (PC)
+- Current Opcode (OP)
+- Index Register (I)
+- All CHIP-8 registers (V0–VF)
+- Delay and Sound timers
+- Stack inspection
+- Full 4 KB memory view
+- Highlighting of the currently executing instruction
+- Single step execution
+- Run / Stop controls for pausing and resuming execution
+
+When the debugger is open, the emulator can be paused and advanced one instruction at a time, making it easier to understand program flow, troubleshoot ROMs, and verify opcode implementations.
 
 ## Prerequisite Software
 
@@ -95,9 +115,7 @@ The CHIP-8 system uses a `hexadecimal keyboard` that has 16 keys from 0 to 9 and
 
 The following keyboard layouts specify the `CHIP-8 Keyboard` and the `Interpreter KeyBoard` used in the application.
 
-<p align='center'>
-	<img src='https://user-images.githubusercontent.com/12175684/40276007-26e1efd6-5bcd-11e8-8e4b-b615659797ee.png' alt='Keyboard'/>
-</p>
+<img src='https://user-images.githubusercontent.com/12175684/40276007-26e1efd6-5bcd-11e8-8e4b-b615659797ee.png' alt='Keyboard'/>
 
 ## Running Tests
 
@@ -117,6 +135,7 @@ Please see our [Contributing Guide](/CONTRIBUTING.md) for more info.
 
     .
     ├── app.py                    # Alternate entry point
+    ├── debug_window.py           # CHIP-8 debugger
     ├── assets/                   # Assets (fonts, ROMs, etc)
     ├── chip8/                    # CHIP-8 Python package
     │   ├── __init__.py           # Package init file
@@ -130,5 +149,6 @@ Please see our [Contributing Guide](/CONTRIBUTING.md) for more info.
     ├── SECURITY.md               # Security policy
     ├── settings.ini              # Application settings
     ├── settings.py               # Settings logic
+    ├── utils.py                  # Utilities
     ├── window.py                 # Window management
     └── __pycache__/              # Python bytecode cache

@@ -1,6 +1,7 @@
 import unittest
 from chip8.chip8 import Chip8
 
+
 class TestChip8(unittest.TestCase):
     def setUp(self):
         self.chip8 = Chip8()
@@ -78,7 +79,8 @@ class TestChip8(unittest.TestCase):
         self.set_opcode('00E0')
         self.chip8._Chip8__gfx[0][0] = 1
         self.chip8.emulateCycle()
-        self.assertTrue(all(all(px == 0 for px in row) for row in self.chip8.getGFX()))
+        self.assertTrue(all(all(px == 0 for px in row)
+                        for row in self.chip8.getGFX()))
 
     def test_00EE_return_subroutine(self):
         self.chip8._Chip8__stk.push(600)
@@ -108,7 +110,8 @@ class TestChip8(unittest.TestCase):
         self.chip8._Chip8__V[2] = 0x10
         self.set_opcode('4211')
         self.chip8.emulateCycle()
-        self.assertEqual(self.chip8.getState()['PRC'], 516)  # +4, since 0x10 != 0x11
+        # +4, since 0x10 != 0x11
+        self.assertEqual(self.chip8.getState()['PRC'], 516)
 
     def test_5XY0_skip_if_vx_eq_vy(self):
         self.chip8._Chip8__V[3] = 0x22
